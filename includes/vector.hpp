@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/09 11:54:47 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/12 17:26:50 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 size_t getCapacity(size_t _size);
 
 template<typename T>
-void	setZeros(T& arr, size_t size)
+void	setZeros(T& arr, size_t size, T value)
 {
 	for (size_t i = 0; i < size; i++)
 	{
-		arr[i] = 0;
+		arr[i] = value;
 	}
 }
 
@@ -36,9 +36,9 @@ namespace ft {
 			T* 					_arr;
 			std::allocator<T>	alloc;
 		public:
-			//******************************************************************//
+			// **************************************************************** //
 			// ------------------------- Constructors ------------------------- //
-			//******************************************************************//
+			// **************************************************************** //
 			vector() {
 				_size = 0;
 				_capacity = 1;
@@ -61,24 +61,68 @@ namespace ft {
 					_arr[i] = initVal;
 				}	
 			}
-			//******************************************************************//
+			// **************************************************************** //
 			// -------------------------- ITERATORS --------------------------- //
-			//******************************************************************//
+			// **************************************************************** //
+			class iterator {
+				private:
+					T* _ptr;
+				public:
+					iterator()
+					{
+						// _ptr = NULL;
+					}
+					iterator(T* ptr)
+					{
+						_ptr = ptr;
+					}
 
-			//******************************************************************//
+					iterator operator++()
+					{
+						++_ptr;
+						return *this;
+					}
+
+					iterator operator++(int)
+					{
+						_ptr++;
+						return *this;
+					}
+
+					T& operator*() const
+					{
+						return *_ptr;
+					}
+
+					bool operator!=(const iterator &obj)
+					{
+						return _ptr != obj._ptr;
+					}
+			};
+			T* begin() const
+			{
+				return _arr;
+			}
+			T* end() const
+			{
+				return _arr + _size;
+			}
+			// **************************************************************** //
 			// -------------------------- CAPACITY ---------------------------- //
-			//******************************************************************//
-			size_t	size() {
+			// **************************************************************** //
+			size_t	size() const
+			{
 				return _size;
 			}
-			size_t max_size() {
+			size_t max_size() const
+			{
 				return powl(2, 64)/sizeof(T) - 1;
 			}
-			void	resize(size_t newSize)
+			void	resize(size_t newSize, T val = 0)
 			{
 				T*	temp;
 				temp = alloc.allocate(newSize);
-				setZeros(temp, newSize);
+				setValue(temp, newSize, val);
 				for (size_t i = 0; i < newSize && i < _size; i++)
 				{
 					temp[i] = _arr[i];
@@ -87,11 +131,11 @@ namespace ft {
 				_arr = temp;
 				_size = newSize;
 			}
-			size_t	capacity()
+			size_t	capacity() const 
 			{
 				return _capacity;
 			}
-			bool 	empty()
+			bool 	empty() const
 			{
 				return (_size == 0);
 			}
@@ -99,12 +143,12 @@ namespace ft {
 			{
 				if (_capacity < newCapacity)
 				{
-					
+					_capacity = newCapacity;
 				}
 			}
-			//******************************************************************//
+			// **************************************************************** //
 			// --------------------------- MODIFIERS -------------------------- //
-			//******************************************************************//
+			// **************************************************************** //
 			void	assign(size_t size, T val)
 			{
 				T* temp;
@@ -135,7 +179,13 @@ namespace ft {
 				_arr[_size] = val;
 				_size++;
 			}
-			void	print()
+			void	pop_back()
+			{
+				_size--;
+			}
+			// ********** INSERT ********** //
+			// insert single element
+			void	print() const
 			{
 				for (size_t i = 0; i < _size; i++)
 				{
@@ -144,9 +194,9 @@ namespace ft {
 				}
 				std::cout << "\n";
 			}
-			//******************************************************************//
+			// **************************************************************** //
 			// --------------------------- DESTRUCTOR ------------------------- //
-			//******************************************************************//
+			// **************************************************************** //
 			~vector(){
 				
 			}
