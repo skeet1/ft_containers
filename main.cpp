@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 15:12:10 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/16 17:45:42 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/16 18:05:20 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int main()
 
 	v.push_back(3);
 	v.push_back(7);
+	v.push_back(29);
+	v.push_back(19);
 
 	ft::vector<int>::iterator it;
 	ft::vector<int>::iterator end;
@@ -99,16 +101,23 @@ int main()
 	// it = v.begin();
 	// end = v.end();
 	// v.insert(it + 3, -765);
-	std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
-	it = v.begin();
-	end = v.end();
-	v.insert(it, 7, 100);
+	// std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
+	// it = v.begin();
+	// end = v.end();
+	// v.insert(it, 7, 100);
 	// while (it != v.end())
 	// {
 	// 	std::cout << *it << std::endl;
 	// 	it++;
 	// }
+	ft::vector<int> arr;
+	
+	arr.push_back(101);
+	arr.push_back(102);
+	arr.push_back(103);
+
+	v.insert(v.begin() + 2, arr.begin(), arr.begin() +3);
 	v.print();
-	std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
+	// std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
     return 0;
 }

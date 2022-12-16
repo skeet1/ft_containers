@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/16 17:44:04 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/16 18:04:57 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,15 +226,14 @@ namespace ft {
 				return _arr + ret;
 			}
 			
-			// insert N elements
+			// insert 2: insert N elements
 			iterator insert(iterator pos, size_t n, const T& val)
 			{
 				T* temp;
 				size_t i = 0;
 				iterator beg = this->begin();
 				size_t ret = 0;
-				while (_size + n > _capacity)
-					_capacity *= 2;
+				_capacity = getCapacity(_size + n);
 				temp = alloc.allocate(_capacity);
 				while (i < _size)
 				{
@@ -247,6 +246,50 @@ namespace ft {
 				ret = i;
 				for (size_t j = 0; j < n; j++)
 					temp[i++] = val;
+				while (i < _size + n)
+				{
+					temp[i] = _arr[i-n];
+					i++;
+				}
+				alloc.deallocate(_arr, _size);
+				_arr = temp;
+				_size += n;
+				return _arr + ret;
+			}
+			
+			// insert 3: insert range of iterators
+			iterator insert(iterator pos, T* start, T* until)
+			{
+				T* temp;
+				size_t i = 0;
+				iterator beg = this->begin();
+				size_t ret = 0;
+				size_t n = 0;
+				T* first;
+
+				first = start;
+				while (first != until)
+				{
+					n++;
+					first++;
+				}
+				while (_size + n > _capacity)
+					_capacity *= 2;
+				temp = alloc.allocate(_capacity);
+				while (i < _size)
+				{
+					if (beg == pos)
+						break;
+					temp[i] = _arr[i];
+					i++;
+					beg++;
+				}
+				ret = i;
+				while (start != until)
+				{
+					temp[i++] = *start;
+					start++;
+				}
 				while (i < _size + n)
 				{
 					temp[i] = _arr[i-n];
