@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/12 17:26:50 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/16 17:44:04 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace ft {
 			{
 				_size = size;
 				_capacity = getCapacity(_size);
-				_arr = alloc.allocate(_size);
+				_arr = alloc.allocate(_capacity);
 				setZeros(_arr, _size);
 			}
 			vector(size_t size, T initVal)
@@ -89,6 +89,12 @@ namespace ft {
 						return *this;
 					}
 
+					iterator operator+(int val)
+					{
+						_ptr += val;
+						return *this;
+					}
+
 					T& operator*() const
 					{
 						return *_ptr;
@@ -97,6 +103,11 @@ namespace ft {
 					bool operator!=(const iterator &obj)
 					{
 						return _ptr != obj._ptr;
+					}
+
+					bool operator==(const iterator &obj)
+					{
+						return _ptr == obj._ptr;
 					}
 			};
 			T* begin() const
@@ -183,8 +194,69 @@ namespace ft {
 			{
 				_size--;
 			}
-			// ********** INSERT ********** //
-			// insert single element
+			//insert 1: single element
+			iterator insert(iterator pos, const T& val)
+			{
+				T*	temp;
+				size_t i = 0;
+				iterator beg = this->begin();
+				size_t ret = 0;
+
+				if (_size == _capacity)
+					_capacity *= 2;
+				temp = alloc.allocate(_capacity);
+				while (i < _size)
+				{
+					if (beg == pos)
+						break;
+					temp[i] = _arr[i];
+					i++;
+					beg++;
+				}
+				ret = i;
+				temp[i++] = val;
+				while (i < _size+1)
+				{
+					temp[i] = _arr[i-1];
+					i++;
+				}
+				alloc.deallocate(_arr, _size);
+				_arr = temp;
+				_size++;
+				return _arr + ret;
+			}
+			
+			// insert N elements
+			iterator insert(iterator pos, size_t n, const T& val)
+			{
+				T* temp;
+				size_t i = 0;
+				iterator beg = this->begin();
+				size_t ret = 0;
+				while (_size + n > _capacity)
+					_capacity *= 2;
+				temp = alloc.allocate(_capacity);
+				while (i < _size)
+				{
+					if (beg == pos)
+						break;
+					temp[i] = _arr[i];
+					i++;
+					beg++;
+				}
+				ret = i;
+				for (size_t j = 0; j < n; j++)
+					temp[i++] = val;
+				while (i < _size + n)
+				{
+					temp[i] = _arr[i-n];
+					i++;
+				}
+				alloc.deallocate(_arr, _size);
+				_arr = temp;
+				_size += n;
+				return _arr + ret;
+			}
 			void	print() const
 			{
 				for (size_t i = 0; i < _size; i++)

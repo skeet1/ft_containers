@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 15:12:10 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/12 17:27:27 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/16 17:45:42 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,29 @@ int main()
 	// 		std::cout << "capacity changed : " << c << "\n";
 	// 	}
 	// }
+
 	v.push_back(3);
 	v.push_back(7);
-	v.push_back(9);
-	v.push_back(19);
 
 	ft::vector<int>::iterator it;
-	
+	ft::vector<int>::iterator end;
+
+	// it = v.begin();
+	// end = v.end();
+	// v.insert(end, 1222);
+	// it = v.begin();
+	// end = v.end();
+	// v.insert(it + 3, -765);
+	std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
 	it = v.begin();
-	while (it != v.end())
-	{
-		std::cout << *it << std::endl;
-		it++;
-	}
+	end = v.end();
+	v.insert(it, 7, 100);
+	// while (it != v.end())
+	// {
+	// 	std::cout << *it << std::endl;
+	// 	it++;
+	// }
+	v.print();
+	std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
     return 0;
 }
