@@ -6,7 +6,7 @@
 #    By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/08 14:25:55 by mkarim            #+#    #+#              #
-#    Updated: 2022/12/08 18:39:03 by mkarim           ###   ########.fr        #
+#    Updated: 2022/12/21 16:45:19 by mkarim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,15 +18,11 @@ FLAGS = -Wall -Wextra -Werror -std=c++98
 
 INCLUDES = includes/vector.hpp
 
-SRC_PATH = ./srcs
+# UTILS_PATH = ./utils
 
-UTILS_PATH = ./utils
+# UTILS_FILES = $(UTILS_PATH)/vector_utils.cpp
 
-SRC_FILES = $(SRC_PATH)/vector.cpp
-
-UTILS_FILES = $(UTILS_PATH)/vector_utils.cpp
-
-SRC = main.cpp $(SRC_FILES) $(UTILS_FILES)
+SRC = main.cpp $(UTILS_FILES)
 
 OBJ = $(SRC:.cpp=.o)
 

@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 15:12:10 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/16 18:05:20 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/21 17:07:42 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int main()
 	// std::cout << f.capacity() << std::endl;
 	// f.print();
 
-    ft::vector<int> v;
+    // ft::vector<int> v;
 
 	// size_t c = v.capacity();
 	// for (int i = 1; i < 50; i++)
@@ -87,13 +87,16 @@ int main()
 	// 	}
 	// }
 
-	v.push_back(3);
-	v.push_back(7);
-	v.push_back(29);
-	v.push_back(19);
-
-	ft::vector<int>::iterator it;
-	ft::vector<int>::iterator end;
+    // v.push_back(5);
+    // v.push_back(15);
+    // v.push_back(25);
+    // v.push_back(35);
+    // v.push_back(45);
+	// std::cout << sizeof(v) << std::endl;
+	// v.print();
+	// v.print_info();
+	// ft::vector<int>::iterator it;
+	// ft::vector<int>::iterator end;
 
 	// it = v.begin();
 	// end = v.end();
@@ -110,14 +113,41 @@ int main()
 	// 	std::cout << *it << std::endl;
 	// 	it++;
 	// }
-	ft::vector<int> arr;
+	// int arr[3] = {101, 102, 103};
 	
-	arr.push_back(101);
-	arr.push_back(102);
-	arr.push_back(103);
+	// arr.push_back(101);
+	// arr.push_back(102);
+	// arr.push_back(103);
 
-	v.insert(v.begin() + 2, arr.begin(), arr.begin() +3);
-	v.print();
+	// v.insert(v.begin() + 2, arr, arr+3);
+	// v.print();
 	// std::cout << "size : " << v.size() << " _capacity is : " << v.capacity() << std::endl;
+
+	// v.erase(v.begin() + 2);
+	// v.erase(v.begin() + 2);
+	// ft::vector<int>::iterator it = v.begin();
+	// while (it != v.end())
+	// {
+	// 	std::cout << *it << " ";
+	// 	it++;
+	// }
+	// std::cout << std::endl;
+	// v.erase(v.begin() + 2);
+
+	ft::vector<int> v;
+
+	v.push_back(1);
+	v.push_back(11);
+	v.push_back(1111);
+	v.push_back(111);
+
+	ft::vector<int> vv(v);
+	vv.insert(vv.begin() + 2, 4);
+	vv.print();
+	ft::vector<int>::iterator it;
+	it = vv.begin() + 3;
+	std::cout << *it << std::endl;
+
+	
     return 0;
 }
