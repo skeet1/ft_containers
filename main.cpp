@@ -6,13 +6,43 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 15:12:10 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/21 17:07:42 by mkarim           ###   ########.fr       */
+/*   Updated: 2022/12/28 11:41:58 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/vector.hpp"
+#include <vector>
+#include <type_traits>
 
-using namespace ft;
+void print(std::vector<int> &v)
+{
+	for (size_t i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i];
+		if (i < v.size() - 1) std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+void print_infos(std::vector<int> &v)
+{
+	std::cout << "size is : " << v.size() << " , and capacity is : " << v.capacity() << std::endl;
+}
+
+void print(ft::vector<int> &v)
+{
+	for (size_t i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i];
+		if (i < v.size() - 1) std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+void print_infos(ft::vector<int> &v)
+{
+	std::cout << "size is : " << v.size() << " , and capacity is : " << v.capacity() << std::endl;
+}
 
 int main()
 {
@@ -135,19 +165,34 @@ int main()
 	// v.erase(v.begin() + 2);
 
 	ft::vector<int> v;
+	ft::vector<int> to_insert;
 
-	v.push_back(1);
-	v.push_back(11);
-	v.push_back(1111);
-	v.push_back(111);
+	to_insert.push_back(99);
+	to_insert.push_back(999);
+	to_insert.push_back(9999);
 
-	ft::vector<int> vv(v);
-	vv.insert(vv.begin() + 2, 4);
-	vv.print();
-	ft::vector<int>::iterator it;
-	it = vv.begin() + 3;
-	std::cout << *it << std::endl;
+	for (int i = 1; i <= 5; i++)
+	{
+		v.push_back(i);
+		// to_insert.push_back(i*5);
+	}
+	v.insert(v.begin()+2, 2, 122);
+	// v.insert(v.begin() + 1, to_insert.begin(), to_insert.begin() + 2);
+	// v.insert(v.begin() + 5, to_insert.begin(), to_insert.end());
+	// 1 99 999 2 122 99 999 9999 122 3 4 5
+	// v.print();
+	// to_insert.print();
+	// v.print_info();
+	print(v);
+	// print(to_insert);
+	// ft::vector<int>::reverse_iterator it = v.rbegin();
 
-	
+	// std::cout << *it << std::endl;
+	// std::cout << "First element (using rbegin): " << *v.rbegin() << std::endl;
+	// std::cout << "Last element (using rend): " << *(v.rend() - 1) << std::endl;
+	// std::cout << "First element (using begin): " << *v.begin() << std::endl;
+	// std::cout << "Last element (using end): " << *(v.end() - 1) << std::endl;
+
+	// system("leaks containers");
     return 0;
 }
