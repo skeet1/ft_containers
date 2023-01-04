@@ -6,17 +6,14 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/28 11:42:41 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/04 13:13:56 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include <iostream>
-#include <stdexcept>
-#include <cmath>
-#include "./../utils/enable_if.hpp"
+#include "all_headers.hpp"
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> > 
@@ -483,7 +480,7 @@ namespace ft {
 			
 			// insert 3: insert range of iterators
 			template <class InputIterator>
-			typename ft::enable_if<!std::is_integral<InputIterator>::value>::type
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
 			insert (iterator position, InputIterator first, InputIterator last)
 			{
 				value_type * temp;

@@ -6,7 +6,7 @@
 #    By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/08 14:25:55 by mkarim            #+#    #+#              #
-#    Updated: 2022/12/25 12:43:18 by mkarim           ###   ########.fr        #
+#    Updated: 2023/01/04 13:11:11 by mkarim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,11 @@ CC = c++
 
 FLAGS = -Wall -Wextra -Werror -std=c++98
 
-INCLUDES = includes/vector.hpp
+INCLUDES_MAIN = includes/vector.hpp 
 
-# UTILS_PATH = ./utils
+UTILS_INC = utils/enable_if.hpp utils/is_integral.hpp
 
-# UTILS_FILES = $(UTILS_PATH)/vector_utils.cpp
+INCLUDES = $(INCLUDES_MAIN) $(UTILS_INC);
 
 SRC = main.cpp $(UTILS_FILES)
 
