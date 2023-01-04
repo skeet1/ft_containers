@@ -1,0 +1,29 @@
+assign overload 
+clear() 
+compare class 
+constructor 
+count() 
+empty() 
+equal_range() 
+erase(InputIt) 
+erase(pos) 
+erase(value) 
+find() 
+insert(InputIt) 
+insert(hint) 
+insert(value) 
+iterators 
+key_comp() 
+lower_bound() 
+max_size() 
+operator != 
+operator < 
+operator <= 
+operator == 
+operator > 
+operator >= 
+reverse iterators 
+size() 
+swap() 
+upper_bound() 
+using allocator 
