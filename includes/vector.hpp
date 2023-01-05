@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/04 13:13:56 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/05 11:54:16 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,18 @@ namespace ft {
 					iterator operator++(int)
 					{
 						_ptr++;
+						return *this;
+					}
+
+					iterator operator--()
+					{
+						--_ptr;
+						return *this;
+					}
+
+					iterator operator--(int)
+					{
+						_ptr--;
 						return *this;
 					}
 
@@ -182,6 +194,8 @@ namespace ft {
 				_capacity = n;
 				_alloc = alloc;
 				_arr = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(_arr + i);
 				for (size_type i = 0; i < _size; i++)
 					_arr[i] = val;
 			}
@@ -189,9 +203,10 @@ namespace ft {
 			// range
 			template <class InputIterator>
 				vector (InputIterator first, InputIterator last,
-					const allocator_type& alloc = allocator_type())
+					const allocator_type& alloc = allocator_type(),
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0)
 			{
-				iterator beg = first;
+				InputIterator beg = first;
 				size_t size = 0;
 				while (beg != last)
 				{
@@ -202,7 +217,9 @@ namespace ft {
 				_capacity = size;
 				_alloc = alloc;
 				_arr = _alloc.allocate(_capacity);
-				size_t i = 0;
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(_arr + i);
+				size_type i = 0;
 				while (first != last)
 				{
 					_arr[i++] = *first;
@@ -214,9 +231,11 @@ namespace ft {
 			vector(const vector&x)
 			{
 				_size = x._size;
-				_capacity = x._capacity;
+				_capacity = x._size;
 				_alloc = x._alloc;
 				_arr = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(_arr + i);
 				for (size_t i = 0; i < _size; i++)
 				{
 					_arr[i] = x._arr[i];
@@ -230,6 +249,8 @@ namespace ft {
 				this->_size = x._size;
 				this->_capacity = x._capacity;
 				this->_arr = this->_alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(this->_arr + i);
 				for (size_type i = 0; i < _size; i++)
 				{
 					this->_arr[i] = x._arr[i];
@@ -262,10 +283,16 @@ namespace ft {
 			{
 				value_type *	temp;
 				temp = _alloc.allocate(n);
+				for (size_type i = 0; i < n; i++)
+					_alloc.construct(temp + i);
 				setValue(temp, n, val);
 				for (size_type i = 0; i < n && i < _size; i++)
 				{
 					temp[i] = _arr[i];
+				}
+				for (size_type i = 0; i < _size; i++)
+				{
+					_alloc.destroy(_arr + i);
 				}
 				_alloc.deallocate(_arr, _size);
 				_arr = temp;
@@ -296,29 +323,25 @@ namespace ft {
 			
 			reference operator[](size_type n)
 			{
-				// if (n >= _size)
-					// throw std::out_of_range("out of range");
 				return _arr[n];
 			}
 			
 			const_reference operator[](size_type n) const
 			{
-				// if (n >= _size)
-				// 	throw std::out_of_range("out of range");
 				return _arr[n];
 			}
 
 			reference at(size_type n)
 			{
-				if (n > _size)
-					throw std::out_of_range("out of range");
+				if (n >= _size)
+					throw std::out_of_range("vector");
 				return _arr[n];
 			}
 			
 			const_reference at(size_type n) const
 			{
-				if (n > _size)
-					throw std::out_of_range("out of range");
+				if (n >= _size)
+					throw std::out_of_range("vector");
 				return _arr[n];
 			}
 			
@@ -352,11 +375,19 @@ namespace ft {
 				value_type * temp;
 				if (_arr)
 				{
+					for (size_type i = 0; i < _size; i++)
+					{
+						_alloc.destroy(_arr + i);
+					}
 					_alloc.deallocate(_arr, _size);
 				}
-				while (_capacity < n)
-					_capacity *= 2;
+				if (n > _capacity)
+				{
+					_capacity = n;
+				}
 				temp = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(temp + i);
 				for (size_type i = 0; i < n; i++)
 					temp[i] = val;
 				_arr = temp;
@@ -365,12 +396,17 @@ namespace ft {
 			
 			// assign: fill
 			template <class InputIterator>
-				void assign (InputIterator first, InputIterator last)
+				typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
+				assign (InputIterator first, InputIterator last)
 			{
 				value_type* temp;
-				iterator beg = first;
+				InputIterator beg = first;
 				if (_arr)
 				{
+					for (size_type i = 0; i < _size; i++)
+					{
+						_alloc.destroy(_arr + i);
+					}
 					_alloc.deallocate(_arr, _size);
 				}
 				size_type size = 0;
@@ -379,9 +415,13 @@ namespace ft {
 					beg++;
 					size++;
 				}
-				while (_capacity < size)
-					_capacity *= 2;
+				if (size > _capacity)
+				{
+					_capacity = size;
+				}
 				temp = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(temp + i);
 				for (size_type i = 0; i < size; i++)
 				{
 					temp[i] = *first;
@@ -399,9 +439,15 @@ namespace ft {
 					_capacity *= 2;
 					if (_capacity == 0) _capacity = 1;
 					temp = _alloc.allocate(_capacity);
+					for (size_type i = 0; i < _capacity; i++)
+						_alloc.construct(temp + i);
 					for (size_type i = 0; i < _size; i++)
 					{
 						temp[i] = _arr[i];
+					}
+					for (size_type i = 0; i < _size; i++)
+					{
+						_alloc.destroy(_arr + i);
 					}
 					_alloc.deallocate(_arr, _size);
 					_arr = temp;
@@ -426,6 +472,8 @@ namespace ft {
 				if (_size == _capacity)
 					_capacity *= 2;
 				temp = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(temp + i);
 				while (i < _size)
 				{
 					if (beg == position)
@@ -441,6 +489,10 @@ namespace ft {
 					temp[i] = _arr[i-1];
 					i++;
 				}
+				for (size_type i = 0; i < _size; i++)
+				{
+					_alloc.destroy(_arr + i);
+				}
 				_alloc.deallocate(_arr, _size);
 				_arr = temp;
 				_size++;
@@ -453,11 +505,15 @@ namespace ft {
 				value_type * temp;
 				size_type i = 0;
 				iterator beg = this->begin();
-				while (_capacity < _size + n)
+				if (_capacity < _size + n)
 				{
 					_capacity *= 2;
+					if (_capacity < _size + n)
+						_capacity = _size + n;
 				}
 				temp = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(temp + i);
 				while (i < _size)
 				{
 					if (beg == position)
@@ -472,6 +528,10 @@ namespace ft {
 				{
 					temp[i] = _arr[i-n];
 					i++;
+				}
+				for (size_type i = 0; i < _size; i++)
+				{
+					_alloc.destroy(_arr + i);
 				}
 				_alloc.deallocate(_arr, _size);
 				_arr = temp;
@@ -495,9 +555,15 @@ namespace ft {
 					n++;
 					start++;
 				}
-				while (_size + n > _capacity)
+				if (_capacity < _size + n )
+				{
 					_capacity *= 2;
+					if (_capacity < _size + n)
+						_capacity = _size + n;
+				}
 				temp = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.construct(temp + i);
 				while (i < _size)
 				{
 					if (beg == position)
@@ -515,6 +581,10 @@ namespace ft {
 				{
 					temp[i] = _arr[i-n];
 					i++;
+				}
+				for (size_type i = 0; i < _size; i++)
+				{
+					_alloc.destroy(_arr + i);
 				}
 				_alloc.deallocate(_arr, _size);
 				_arr = temp;
@@ -539,6 +609,7 @@ namespace ft {
 								break;
 							_arr[i] = _arr[i+1];
 							it++;
+							i++;
 						}
 						break;
 					}
@@ -595,19 +666,26 @@ namespace ft {
 			{
 				return _alloc;
 			}
-
-			//print infos
-			void	print() const
+			
+			//swap
+			void	swap(vector &x)
 			{
-				for (size_type i = 0; i < _size; i++)
-				{
-					std::cout << _arr[i];
-					if (i < _size - 1) std::cout << " ";
-				}
-				std::cout << "\n";
-			}
-			void	print_info() const {
-				std::cout << "size is : " << _size << " , and capacity is : " << _capacity << std::endl;
+				vector temp;
+
+				temp._alloc = this->_alloc;
+				temp._size = this->_size;
+				temp._capacity = this->_capacity;
+				temp._arr = this->_arr;
+
+				this->_alloc = x._alloc;
+				this->_size = x._size;
+				this->_capacity = x._capacity;
+				this->_arr = x._arr;
+
+				x._alloc = temp._alloc;
+				x._size = temp._size;
+				x._capacity = temp._capacity;
+				temp._arr = temp._arr;
 			}
 	};
 }

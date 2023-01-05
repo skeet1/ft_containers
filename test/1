@@ -1,0 +1,17 @@
+#include <iostream>
+
+class MyClass {
+	public:
+		MyClass()
+		{
+			std::cout << "This is the constructor" << std::endl;
+		}
+};
+
+int main()
+{
+	std::allocator alloc;
+	MyClass* p = alloc.allocate(10);
+
+	return 0;
+}
