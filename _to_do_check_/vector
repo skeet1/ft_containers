@@ -5,8 +5,8 @@ back() ✅
 begin() ✅ 
 capacity() ✅ 
 clear() ✅ 
-constructor(std iterators) 
-constructor 
+constructor(std iterators) ✅ 
+constructor ✅ 
 data() 
 empty() ✅ 
 end() ✅ 
@@ -33,5 +33,5 @@ rend()
 reserve() ✅ 
 resize() 
 size() ✅ 
-swap() 
+swap() _arr
 using allocator 
