@@ -29,7 +29,7 @@ Another difference between AVL trees and red-black trees is the way they store a
 Overall, both AVL trees and red-black trees are efficient data structures for storing and searching data, but red-black trees may be more suitable in cases where frequent insertions and deletions are expected, due to their more relaxed balance conditions.
 
 
-# RESOURCES TO LEARN MORE ABOUT RED BLACK TREE :#
+## RESOURCES TO LEARN MORE ABOUT RED BLACK TREE :##
   - https://www.geeksforgeeks.org/introduction-to-red-black-tree/
   - https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
   - https://www.programiz.com/dsa/red-black-tree
