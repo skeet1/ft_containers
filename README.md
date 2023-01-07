@@ -24,12 +24,12 @@ Now we have a general idea about balancing binary search tree, and we are ready 
 
 One main difference between AVL trees and red-black trees is that AVL trees are more strictly balanced than red-black trees. This means that the height of an AVL tree is always O(log n) where n is the number of nodes in the tree, while the height of a red-black tree is only O(log n) on average. This can make AVL trees slightly faster when it comes to searching for elements, but it also means that AVL trees may require more rotations (a process used to balance the tree) when inserting and deleting elements, which can make them slower in practice.
 
-Another difference between AVL trees and red-black trees is the way they store and maintain balance. AVL trees use a technique called height-balancing, where the height of the left and right subtrees of any node differ by at most 1. Red-black trees, on the other hand, use a technique called color-balancing, where each node is assigned a color (red or black) and certain rules are followed to ensure that the tree remains balanced. These rules include:
-
-1. Every node is either red or black
-2. The root is black
-3. Every leaf (NIL) is black
-4. If a node is red, then both its children are black
-5. Every path from a given node to any of its descendant NIL nodes contains the same number of black nodes.
+Another difference between AVL trees and red-black trees is the way they store and maintain balance. AVL trees use a technique called height-balancing, where the height of the left and right subtrees of any node differ by at most 1. Red-black trees, on the other hand, use a technique called color-balancing, where each node is assigned a color (red or black) and certain rules are followed to ensure that the tree remains balanced.
 
 Overall, both AVL trees and red-black trees are efficient data structures for storing and searching data, but red-black trees may be more suitable in cases where frequent insertions and deletions are expected, due to their more relaxed balance conditions.
+
+
+# RESOURCES TO LEARN MORE ABOUT RED BLACK TREE :#
+  - https://www.geeksforgeeks.org/introduction-to-red-black-tree/
+  - https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
+  - https://www.programiz.com/dsa/red-black-tree
