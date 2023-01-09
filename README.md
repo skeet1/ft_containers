@@ -1,13 +1,13 @@
 # Map
 ## RED_BLACK_TREE
 
-Trees are often used to implement data structers who needs inserting and deletion and also searching for elements, cause the trees can do this job in a minumum time, and usally implemented using a self-balancing binary search tree, such as a *RED-BLACK-TREE* and *AVL TREE*.
+Trees are often used to implement data structures that need inserting and deletion and also searching for elements, cause the trees can do this job in a minimum time, and usually implemented using a self-balancing binary search tree, such as a *RED-BLACK-TREE* and *AVL TREE*.
 
-before start talking about each one of them, let's take a look about what *Binary Search Tree* and, *Balancing Binary Search Tree* means?
+before start talking about each one of them, let's take a look at what *Binary Search Tree* and, *Balancing Binary Search Tree* means?
 
 *Binary Search Tree*:
 A binary tree is a special type of tree in which every node or vertex has either no child node or one child node or two child nodes. A binary tree is an important class of a tree data structure in which a node can have at most two children.
-And a binary search tree (BST) is a data structure that stores items in a sorted manner, allowing for fast search, insertion, and deletion of elements. It works by storing items in a tree-like structure, with the "left" subtree of a node containing items that are less than the node's key, and the "right" subtree containing items that are greater than the node's key. This allows for fast search of elements by starting at the root node and comparing the target key with the keys in the tree, as described in my previous answer.
+And a binary search tree (BST) is a data structure that stores items in a sorted manner, allowing for fast search, insertion, and deletion of elements. It works by storing items in a tree-like structure, with the "left" subtree of a node containing items that are less than the node's key, and the "right" subtree containing items that are greater than the node's key. This allows for a fast search of elements by starting at the root node and comparing the target key with the keys in the tree, as described in my previous answer.
 
 Binary search trees have several useful properties:
 
@@ -18,7 +18,7 @@ Binary search trees have several useful properties:
 *Balancing Binary Search Tree*:
 A self-balancing binary search tree (BST) is a type of binary search tree that automatically adjusts its structure to maintain balance, resulting in improved search, insertion, and deletion performance. There are several different techniques that can be used to implement self-balancing BSTs, including rotations, rebalancing, height-balancing, and color-balancing.
 
-Now we have a general idea about balancing binary search tree, and we are ready to learn more about AVL and Red-Black-Tree.
+Now we have a general idea about balancing binary search trees, and we are ready to learn more about AVL and Red-Black-Tree.
 
 *AVL* trees and *red-black* trees are both types of self-balancing binary search trees. They are used to store data in a sorted, searchable manner and allow for quick insertion, deletion, and lookup of elements.
 
@@ -28,8 +28,14 @@ Another difference between AVL trees and red-black trees is the way they store a
 
 Overall, both AVL trees and red-black trees are efficient data structures for storing and searching data, but red-black trees may be more suitable in cases where frequent insertions and deletions are expected, due to their more relaxed balance conditions.
 
+This is a general review of the binary search trees and balancing binary search trees, so before trying to learn more about the red-black tree, try to understand the binary search tree and implement your own, it will give you the advantage to see how AVL and Red-black tree works, and what the purpose from using them.
 
-### RESOURCES TO LEARN MORE ABOUT RED BLACK TREE :
+## RESOURCES TO LEARN MORE ABOUT BINARY SEARCH TREE :
+  - https://www.geeksforgeeks.org/binary-search-tree-data-structure/
+  - https://www.cs.usfca.edu/~galles/visualization/BST.html
+
+## RESOURCES TO LEARN MORE ABOUT RED BLACK TREE :
   - https://www.geeksforgeeks.org/introduction-to-red-black-tree/
   - https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
   - https://www.programiz.com/dsa/red-black-tree
+  - https://www.youtube.com/watch?v=mJEooLJdDZw&list=PLv9sD0fPjvSHqIOLTIvHJWjkdH0IdzmXT&index=9&ab_channel=UzairJavedAkhtar
