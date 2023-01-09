@@ -6,7 +6,7 @@
 #    By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/08 14:25:55 by mkarim            #+#    #+#              #
-#    Updated: 2023/01/04 13:11:11 by mkarim           ###   ########.fr        #
+#    Updated: 2023/01/09 14:56:22 by mkarim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ FLAGS = -Wall -Wextra -Werror -std=c++98
 
 INCLUDES_MAIN = includes/vector.hpp 
 
-UTILS_INC = utils/enable_if.hpp utils/is_integral.hpp
+UTILS_INC = utils/enable_if.hpp utils/is_integral.hpp utils/red_black_tree.hpp
 
 INCLUDES = $(INCLUDES_MAIN) $(UTILS_INC);
 

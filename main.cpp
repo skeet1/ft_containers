@@ -6,12 +6,14 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 15:12:10 by mkarim            #+#    #+#             */
-/*   Updated: 2022/12/28 11:41:58 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/09 14:55:27 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/vector.hpp"
+#include "./includes/map.hpp"
 #include <vector>
+#include <map>
 #include <type_traits>
 
 void print(std::vector<int> &v)
@@ -164,26 +166,27 @@ int main()
 	// std::cout << std::endl;
 	// v.erase(v.begin() + 2);
 
-	ft::vector<int> v;
-	ft::vector<int> to_insert;
+	// std::vector<int> v;
+	// std::vector<int> t1, t2;
+	// ft::vector<int> to_insert;
 
-	to_insert.push_back(99);
-	to_insert.push_back(999);
-	to_insert.push_back(9999);
+	// to_insert.push_back(99);
+	// to_insert.push_back(999);
+	// to_insert.push_back(9999);
 
-	for (int i = 1; i <= 5; i++)
-	{
-		v.push_back(i);
-		// to_insert.push_back(i*5);
-	}
-	v.insert(v.begin()+2, 2, 122);
+	// for (int i = 1; i <= 5; i++)
+	// {
+	// 	v.push_back(i);
+	// 	// to_insert.push_back(i*5);
+	// }
+	// v.insert(v.begin()+2, 2, 122);
 	// v.insert(v.begin() + 1, to_insert.begin(), to_insert.begin() + 2);
 	// v.insert(v.begin() + 5, to_insert.begin(), to_insert.end());
 	// 1 99 999 2 122 99 999 9999 122 3 4 5
 	// v.print();
 	// to_insert.print();
 	// v.print_info();
-	print(v);
+	// print(v);
 	// print(to_insert);
 	// ft::vector<int>::reverse_iterator it = v.rbegin();
 
@@ -193,6 +196,45 @@ int main()
 	// std::cout << "First element (using begin): " << *v.begin() << std::endl;
 	// std::cout << "Last element (using end): " << *(v.end() - 1) << std::endl;
 
+	// t1.push_back(5);
+	// t1.push_back(7);
+	// t1.push_back(2);
+	// t1.push_back(1);
+	// t1.push_back(5);
+
+	// std::vector<int> t(t1.begin(), t1.end());
+	// std::vector<int> t3(5, 11);
+
+	// ft::vector<int> b;
+	// ft::vector<int> vec;
+
+	// b.push_back(5);
+	// b.push_back(7);
+	// b.push_back(2);
+	// b.push_back(1);
+	// b.push_back(5);
+
+	// std::vector<int>::iterator it = b.begin();
+	// // ft::vector<int>::iterator it1 = b.begin() + 3;
+
+	// it += 10;
+	// std::cout << (b == vec) << std::endl;
+	// a.swap(b);
+	// print(a);
+	// print_infos(a);
+
+	// print(b);
+	// print_infos(b);
+
 	// system("leaks containers");
+	RBT<int, int> tree;
+
+	tree.insert(10, 29);
+	tree.insert(20, 12);
+	tree.insert(30, 22);
+	tree.insert(5, 10);
+
+	tree.printTree();
+
     return 0;
 }

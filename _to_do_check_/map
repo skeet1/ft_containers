@@ -1,7 +1,7 @@
 assign overload 
 at() 
 clear() 
-compare class 
+compare 
 constructor 
 count() 
 empty() 

@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/05 11:54:16 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/08 11:42:07 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,25 @@ namespace ft {
 					{
 						_ptr += val;
 						return *this;
-					} 
+					}
+
+					iterator operator-(int val)
+					{
+						_ptr -= val;
+						return *this;
+					}
+
+					iterator operator+=(int val)
+					{
+						_ptr += val;
+						return *this;
+					}
+
+					iterator operator-=(int val)
+					{
+						_ptr -= val;
+						return *this;
+					}
 
 					T& operator*() const
 					{
@@ -95,6 +113,26 @@ namespace ft {
 					bool operator==(const iterator &obj)
 					{
 						return _ptr == obj._ptr;
+					}
+
+					bool operator>(const iterator &obj)
+					{
+						return _ptr > obj._ptr;
+					}
+					
+					bool operator<(const iterator &obj)
+					{
+						return _ptr < obj._ptr;
+					}
+
+					bool operator>=(const iterator &obj)
+					{
+						return _ptr >= obj._ptr;
+					}
+					
+					bool operator<=(const iterator &obj)
+					{
+						return _ptr <= obj._ptr;
 					}
 			};
 			// class reverse_iterator {
@@ -285,7 +323,10 @@ namespace ft {
 				temp = _alloc.allocate(n);
 				for (size_type i = 0; i < n; i++)
 					_alloc.construct(temp + i);
-				setValue(temp, n, val);
+				for (size_type i = 0; i < n; i++)
+				{
+					temp[i] = val;
+				}
 				for (size_type i = 0; i < n && i < _size; i++)
 				{
 					temp[i] = _arr[i];
@@ -670,22 +711,41 @@ namespace ft {
 			//swap
 			void	swap(vector &x)
 			{
-				vector temp;
-
-				temp._alloc = this->_alloc;
-				temp._size = this->_size;
-				temp._capacity = this->_capacity;
-				temp._arr = this->_arr;
-
-				this->_alloc = x._alloc;
-				this->_size = x._size;
-				this->_capacity = x._capacity;
-				this->_arr = x._arr;
-
-				x._alloc = temp._alloc;
-				x._size = temp._size;
-				x._capacity = temp._capacity;
-				temp._arr = temp._arr;
+				std::swap(_arr, x._arr);
+				std::swap(_capacity, x._capacity);
+				std::swap(_arr, x._arr);
+				std::swap(_alloc, x._alloc);
+			}
+			
+			//operators
+			bool operator==(const vector &obj)
+			{
+				return (_arr == obj._arr && _size == obj._size && _capacity == obj._capacity && _alloc == obj._alloc);
+			}
+			
+			bool operator!=(const vector &obj)
+			{
+				return (_arr != obj._arr && _size != obj._size && _capacity != obj._capacity && _alloc != obj._alloc);
+			}
+			
+			bool operator<(const vector &obj)
+			{
+				return (_arr < obj._arr && _size < obj._size && _capacity < obj._capacity);
+			}
+			
+			bool operator<=(const vector &obj)
+			{
+				return (_arr <= obj._arr && _size <= obj._size && _capacity <= obj._capacity);
+			}
+			
+			bool operator>(const vector &obj)
+			{
+				return (_arr > obj._arr && _size > obj._size && _capacity > obj._capacity);
+			}
+			
+			bool operator>=(const vector &obj)
+			{
+				return (_arr >= obj._arr && _size >= obj._size && _capacity >= obj._capacity);
 			}
 	};
 }
