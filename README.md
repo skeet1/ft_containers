@@ -31,13 +31,11 @@ Overall, both AVL trees and red-black trees are efficient data structures for st
 This is a general review of the binary search trees and balancing binary search trees, so before trying to learn more about the red-black tree, try to understand the binary search tree and implement your own, it will give you the advantage to see how AVL and Red-black tree works, and what the purpose from using them.
 
 ## RESOURCES TO LEARN MORE ABOUT BINARY SEARCH TREE
-
   - https://www.geeksforgeeks.org/binary-search-tree-data-structure/
   - https://www.cs.usfca.edu/~galles/visualization/BST.html
 
 ## RESOURCES TO LEARN MORE ABOUT RED BLACK TREE
-
-  _ https://github.com/skeet1/Red_Black_Tree
+  - https://github.com/skeet1/Red_Black_Tree
   - https://www.geeksforgeeks.org/introduction-to-red-black-tree/
   - https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
   - https://www.programiz.com/dsa/red-black-tree
