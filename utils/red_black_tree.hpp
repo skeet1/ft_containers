@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/28 15:25:47 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:02:58 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include "pair.hpp"
 
 template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
 class RBT {
         struct Node {
-            Key     _key;
-            T       _value;
+            ft::pair<Key, T> p;
             Node*   _parent;
             Node*   _left;
             Node*   _right;
@@ -29,27 +29,35 @@ class RBT {
             size_t  _black_height;
             size_t  _height;
             char    _color;
+            bool    _end;
 
             Node(Key key, T value)
             {
-                _key = key;
-                _value = value;
+                p = ft::make_pair(key, value);
                 _parent = NULL;
                 _left = NULL;
                 _right = NULL;
                 _uncle = NULL;
                 _color = 'R';
                 _black_height = 1;
+                _end = false;
             }
 
             Node()
             {
-                _key = 0;
-                _value = 0;
+                Key a;
+                T b;
+                p = ft::make_pair(a, b);
+                _end = true;
             }
         };
+    public:
+            typedef Allocator                                                   allocator_type;
+            typedef typename allocator_type::template rebind<Node>::other       allocator_node;
     private:
-        Node*   root;
+        Node*                   root;
+        allocator_type          alloc;
+        allocator_node          alloc_node;
     
     protected:
         
@@ -57,33 +65,21 @@ class RBT {
         {
             if (search(root, key))
                 return ;
-            Node*   newNode = new Node(key, value);
+            Node*   newNode = alloc_node.allocate(1);
+            alloc_node.construct(newNode, Node(key, value));
             root = insert_node(root, newNode);
             check_violation(newNode);
         }
 
         Node*   search(Node* root, Key key)
         {
-            // recursive way 
-            
-            // if (root == NULL)
-            //     return NULL;
-            // if (root->_key == key)
-            //     return root;
-            // else if (Compare()(key, root->_key))
-            //     return search(root->_left, key);
-            // else
-            //     return search(root->_right, key);
-
-            // iterative way
             while (root)
             {
-                // if (root->_key > key)
-                if (Compare()(key, root->_key))
+                if (Compare()(key, root->p.first))
                 {
                     root = root->_left;
                 }
-                else if (Compare()(root->_key, key))
+                else if (Compare()(root->p.first, key))
                 {
                     root = root->_right;
                 }
@@ -98,26 +94,26 @@ class RBT {
             Key tmp_key;
             T   tmp_value;
 
-            tmp_key = n1->_key;
-            tmp_value = n1->_value;
+            tmp_key = n1->p.first;
+            tmp_value = n1->p.second;
 
-            n1->_key = n2->_key;
-            n1->_value = n2->_value;
+            n1->p.first = n2->p.first;
+            n1->p.second = n2->p.second;
 
-            n2->_key = tmp_key;
-            n2->_value = tmp_value;
+            n2->p.first = tmp_key;
+            n2->p.second = tmp_value;
         }
 
         Node*   insert_node(Node* node, Node* newNode)
         {
             if (node == NULL)
                 return newNode;
-            if (Compare()(newNode->_key, node->_key))
+            if (Compare()(newNode->p.first, node->p.first))
             {
                 node->_left = insert_node(node->_left, newNode);
                 node->_left->_parent = node;
             }
-            else if (Compare()(node->_key, newNode->_key))
+            else if (Compare()(node->p.first, newNode->p.first))
             {
                 node->_right = insert_node(node->_right, newNode);
                 node->_right->_parent = node;
@@ -315,13 +311,15 @@ class RBT {
             if (!node->_left && !node->_right)
             {
                 Node* parent = node->_parent;
-
-                if (node == parent->_left)
+                Node* save_node = node;
+                
+                if (save_node == parent->_left)
                     parent->_left = NULL;
-                else
+                else if (save_node == parent->_right)
                     parent->_right = NULL;
-                delete node;
-                node = nullptr;
+                alloc_node.destroy(save_node);
+                alloc_node.deallocate(save_node, 1);
+                save_node = nullptr;
             }
             else if (!node->_right)
             {
@@ -349,12 +347,14 @@ class RBT {
         // case one ==> it's the simple case the color of node is red so there's no violation
         void    case_one(Node*& node)
         {
+            (void)node;
             // nothing to do here
         }
 
         // case two ==> when we are in root nothing to do
         void    case_two(Node*& node)
         {
+            (void)node;
             return ;
         }
 
@@ -481,7 +481,7 @@ class RBT {
 
         void    check_cases(Node*& node)
         {
-            // std::cout << node->_key << ", color is : " << node->_color << std::endl;
+            // std::cout << node->p.first << ", color is : " << node->_color << std::endl;
             if (node->_color == 'R')
             {
                 case_one(node);
@@ -513,9 +513,9 @@ class RBT {
         {
             if (!node)
                 return ;
-            if (Compare()(key, node->_key))
+            if (Compare()(key, node->p.first))
                 remove(node->_left, key);
-            else if (Compare()(node->_key, key))
+            else if (Compare()(node->p.first, key))
                 remove(node->_right, key);
             else
             {
@@ -523,7 +523,8 @@ class RBT {
                 {
                     if (node == root)
                     {
-                        delete node;
+                        alloc_node.destroy(node);
+                        alloc_node.deallocate(node, 1);
                         node = nullptr;
                     }
                     else
@@ -564,8 +565,8 @@ class RBT {
 
         void    move_data(Node*&n1, Node* n2)
         {
-            n1->_key = n2->_key;
-            n1->_value = n2->_value;
+            n1->p.first = n2->p.first;
+            n1->p.second = n2->p.second;
         }
 
         bool    black_child(Node* node)
@@ -588,14 +589,39 @@ class RBT {
                 std::cout << "\033[31m";
             else
                 std::cout << "\033[30m";
-            std::cout << "(" << root->_key << ":" << root->_value << ")";
+            std::cout << "(" << root->p.first << ":" << root->p.second << ")";
             if (root->_parent)
-                std::cout << " P is : " << root->_parent->_key;
+                std::cout << " P is : " << root->_parent->p.first;
             else
                 std::cout << " i am the root";
             std::cout << std::endl << std::endl;
             printTree(root->_left, depth+1);
             std::cout << "\033[0m";
+        }
+
+        void    clear(Node*& node)
+        {
+            if (node == NULL)
+                return ;
+            clear(node->_left);
+            clear(node->_right);
+            alloc_node.destroy(node);
+            alloc_node.deallocate(node, 1);
+            node = nullptr;
+        }
+
+        Node*  find_the_smallest(Node* node)
+        {
+            while (node->_left)
+                node = node->_left;
+            return node;
+        }
+
+        Node*   find_the_biggest(Node* node)
+        {
+            while (node->_right)
+                node = node->_right;
+            return node;
         }
         
     public:
@@ -622,9 +648,164 @@ class RBT {
             return false;
         }
 
+        void    clear()
+        {
+            clear(root);
+        }
+
         void    printTree()
         {
             printTree(root, 0);
+        }
+        
+        // iterators
+        class iterator {
+            private:
+                Node*   curr_node;
+            public:
+                iterator() : curr_node(nullptr)
+                {}
+                
+                iterator(Node* node) : curr_node(node)
+                {}
+
+                iterator(const iterator& it)
+                {
+                    curr_node->p = it.curr_node->p;
+                    curr_node->_black_height = it.curr_node->_black_height;
+                    curr_node->_left = it.curr_node->_left;
+                    curr_node->_right = it.curr_node->_right;
+                    curr_node->_parent = it.curr_node->_parent;
+                    curr_node->_color = it.curr_node->_color;
+                }
+
+                void    operator*()
+                {
+                    // std::cout << "first is : " << curr_node->p.first << ", second : " << curr_node->p.second << std::endl;
+                }
+
+                bool    operator==(const iterator it)
+                {
+                    if (!curr_node || !it.curr_node) return false;
+                    return curr_node->p.first == it.curr_node->p.first;
+                }
+
+                bool    operator!=(const iterator it)
+                {
+                    if (!curr_node) return false;
+                    if (!it.curr_node) return true;
+                    std::cout << curr_node->p.first << std::endl;
+                    return curr_node->p.first != it.curr_node->p.first;
+                }
+
+                ft::pair<Key, T>*    operator->()
+                {
+                    return &curr_node->p;
+                }
+
+                iterator    operator++()
+                {
+                    Node*   succ = curr_node->_right;
+
+                    while (succ && succ->_left)
+                        succ = succ->_left;
+                    if (succ)
+                        curr_node = succ;
+                    else
+                    {
+                        while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
+                            curr_node = curr_node->_parent;
+                        curr_node = curr_node->_parent;
+                    }
+                    return curr_node;
+                }
+                
+                iterator    operator++(int)
+                {
+                    Node*   save_curr_node = curr_node;
+                    Node*   succ = curr_node->_right;
+
+                    while (succ && succ->_left)
+                        succ = succ->_left;
+                    if (succ)
+                        curr_node = succ;
+                    else
+                    {
+                        while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
+                            curr_node = curr_node->_parent;
+                        curr_node = curr_node->_parent;
+                    }
+                    return save_curr_node;
+                }
+                
+                iterator    operator--()
+                {
+                    if (curr_node->_end)
+                    {
+                        curr_node = curr_node->_parent;
+                    }
+                    else
+                    {
+                        Node*   predec = curr_node->_left;
+                        
+                        while (predec && predec->_right)
+                            predec = predec->_right;
+                        if (predec)
+                            curr_node = predec;
+                        else
+                        {
+                            while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
+                                curr_node = curr_node->_parent;
+                            curr_node = curr_node->_parent;
+                        }
+                    }
+                    return curr_node;
+                }
+                
+                iterator    operator--(int)
+                {
+                    Node*   save_curr_node = curr_node;
+                    if (curr_node->_end)
+                    {
+                        curr_node = curr_node->_parent;
+                    }
+                    else
+                    {
+                        Node*   predec = curr_node->_left;
+                        
+                        while (predec && predec->_right)
+                            predec = predec->_right;
+                        if (predec)
+                            curr_node = predec;
+                        else
+                        {
+                            while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
+                                curr_node = curr_node->_parent;
+                            curr_node = curr_node->_parent;
+                        }
+                    }
+                    return save_curr_node;
+                }
+        };
+
+        iterator   begin()
+        {
+            Node*   smallest = find_the_smallest(root);
+            return iterator(smallest);
+        }
+
+        iterator    end()
+        {
+            Node*   nil;
+            Node*   right_most;
+
+            nil = alloc_node.allocate(1);
+            alloc_node.construct(nil);
+            right_most = root;
+            while (right_most->_right)
+                right_most = right_most->_right;
+            nil->_parent = right_most;
+            return iterator(nil);
         }
 };
 
