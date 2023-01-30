@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/30 17:02:58 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/30 20:27:51 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,7 +481,6 @@ class RBT {
 
         void    check_cases(Node*& node)
         {
-            // std::cout << node->p.first << ", color is : " << node->_color << std::endl;
             if (node->_color == 'R')
             {
                 case_one(node);
@@ -681,7 +680,6 @@ class RBT {
 
                 void    operator*()
                 {
-                    // std::cout << "first is : " << curr_node->p.first << ", second : " << curr_node->p.second << std::endl;
                 }
 
                 bool    operator==(const iterator it)
@@ -694,7 +692,6 @@ class RBT {
                 {
                     if (!curr_node) return false;
                     if (!it.curr_node) return true;
-                    std::cout << curr_node->p.first << std::endl;
                     return curr_node->p.first != it.curr_node->p.first;
                 }
 
