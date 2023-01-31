@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/08 11:42:07 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/31 10:33:25 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -717,37 +717,115 @@ namespace ft {
 				std::swap(_alloc, x._alloc);
 			}
 			
-			//operators
-			bool operator==(const vector &obj)
-			{
-				return (_arr == obj._arr && _size == obj._size && _capacity == obj._capacity && _alloc == obj._alloc);
-			}
+			template <class T1, class Alloc>
+			friend bool operator==(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
 			
-			bool operator!=(const vector &obj)
-			{
-				return (_arr != obj._arr && _size != obj._size && _capacity != obj._capacity && _alloc != obj._alloc);
-			}
+			template <class T1, class Alloc>
+			friend bool operator!=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
 			
-			bool operator<(const vector &obj)
-			{
-				return (_arr < obj._arr && _size < obj._size && _capacity < obj._capacity);
-			}
+			template <class T1, class Alloc>
+			friend bool operator<(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
 			
-			bool operator<=(const vector &obj)
-			{
-				return (_arr <= obj._arr && _size <= obj._size && _capacity <= obj._capacity);
-			}
+			template <class T1, class Alloc>
+			friend bool operator<=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
 			
-			bool operator>(const vector &obj)
-			{
-				return (_arr > obj._arr && _size > obj._size && _capacity > obj._capacity);
-			}
+			template <class T1, class Alloc>
+			friend bool operator>(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
 			
-			bool operator>=(const vector &obj)
-			{
-				return (_arr >= obj._arr && _size >= obj._size && _capacity >= obj._capacity);
-			}
+			template <class T1, class Alloc>
+			friend bool operator>=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
+			
 	};
+
+	template <class T1, class Alloc>
+	bool operator==(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
+	{
+		if (lhs.size() == rhs.size() && lhs.capacity() == rhs.capacity() && lhs.get_allocator() == lhs.get_allocator())
+		{
+			for (size_t i = 0; i < lhs._size; i++)
+			{
+				if (lhs._arr[i] != rhs._arr[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	template <class T1, class Alloc>
+	bool operator!=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template <class T1, class Alloc>
+	bool operator<(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
+	{
+		if (lhs.size() < rhs.size())
+			return true;
+		if (lhs.size() == rhs.size())
+		{
+			for (size_t i = 0; i < lhs.size(); i++)
+			{
+				if (lhs._arr[i] >= rhs._arr[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	template <class T1, class Alloc>
+	bool operator<=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
+	{
+		if (lhs.size() < rhs.size())
+			return true;
+		if (lhs.size() == rhs.size())
+		{
+			for (size_t i = 0; i < lhs.size(); i++)
+			{
+				if (lhs._arr[i] > rhs._arr[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	template <class T1, class Alloc>
+	bool operator>(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
+	{
+		if (lhs.size() > rhs.size())
+			return true;
+		if (lhs.size() == rhs.size())
+		{
+			for (size_t i = 0; i < lhs.size(); i++)
+			{
+				if (lhs._arr[i] <= rhs._arr[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	template <class T1, class Alloc>
+	bool operator>=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
+	{
+		if (lhs.size() > rhs.size())
+			return true;
+		if (lhs.size() == rhs.size())
+		{
+			for (size_t i = 0; i < lhs.size(); i++)
+			{
+				if (lhs._arr[i] < rhs._arr[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
 }
 
 #endif
