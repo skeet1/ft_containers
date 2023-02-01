@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/01 07:28:29 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/01 13:32:48 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include "../utils/red_black_tree.hpp"
+# include "stack.hpp"
 
 namespace ft {
     template <class Key,
@@ -148,6 +149,66 @@ namespace ft {
                     _tree.insert(first->first, first->second);
                     first++;
                 }
+            }
+
+            iterator    find(const key_type& k)
+            {
+                ft::pair<iterator, bool> p = _tree.find(k);
+                if (p.second)
+                    return p.first;
+                return _tree.end();
+            }
+
+            mapped_type&    operator[](const key_type& k)
+            {
+                pair<key_type, mapped_type> val;
+
+                val.first = k;
+                val.second = mapped_type();
+                pair<iterator, bool> p = insert(val);
+                iterator it = p.first;
+                return it->second;
+            }
+
+            void    erase(iterator  position)
+            {
+                _tree.remove(position->first);
+                _size--;
+            }
+
+            size_type   erase(const key_type& k)
+            {
+                iterator it = find(k);
+                if (it == _tree.end())
+                    return 0;
+                _tree.remove(k);
+                _size--;
+                return 1;
+            }
+
+            void    erase(iterator first, iterator last)
+            {
+                ft::stack<key_type> st;
+                ft::stack<key_type> to_erase;
+                
+                while (first != last)
+                {
+                    st.push(first->first);
+                    first++;
+                }
+
+                while (!st.empty())
+                {
+                    to_erase.push(st.top());
+                    st.pop();
+                }
+
+                while (!to_erase.empty())
+                {
+                    erase(to_erase.top());
+                    to_erase.pop();
+                }
+
             }
 
             void    print()
