@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/31 06:04:39 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/01 07:28:29 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,32 @@ namespace ft {
     class map
     {
         public:
-            typedef Key                                      key_type;
-            typedef T                                        mapped_type;
-            typedef std::pair<const key_type, mapped_type>        value_type;
-            typedef Compare                                  key_compare;
-            typedef Allocator                                allocator_type;
-            typedef typename allocator_type::reference       reference;
-            typedef typename allocator_type::const_reference const_reference;
-            typedef typename allocator_type::pointer         pointer;
-            typedef typename allocator_type::const_pointer   const_pointer;
-            typedef typename allocator_type::size_type       size_type;
-            typedef typename allocator_type::difference_type difference_type;
+            typedef Key                                             key_type;
+            typedef T                                               mapped_type;
+            typedef ft::pair<const key_type, mapped_type>          value_type;
+            typedef Compare                                         key_compare;
+            typedef Allocator                                       allocator_type;
+            typedef typename allocator_type::reference              reference;
+            typedef typename allocator_type::const_reference        const_reference;
+            typedef typename allocator_type::pointer                pointer;
+            typedef typename allocator_type::const_pointer          const_pointer;
+            typedef typename allocator_type::size_type              size_type;
+            typedef typename allocator_type::difference_type        difference_type;
+            typedef typename RBT<key_type, mapped_type>::iterator   iterator;
 
         private:
-            RBT<Key, T> _tree;
-            size_type   _size;
-
+            RBT<Key, T>     _tree;
+            size_type       _size;
+            key_compare     _comp;
+            allocator_type  _alloc;
+        
         public:
-            // explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-            // {
-            //     _size = 0;
-            // }
+            explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+            {
+                _size = 0;
+                _comp = comp;
+                _alloc = alloc;
+            }
 
             // template <class InputIterator>
             // map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
@@ -120,9 +125,45 @@ namespace ft {
             //     return _size;
             // }
 
-            // size_type
+            // insert ==> (1) single element
+            pair<iterator, bool>    insert(const value_type& val)
+            {
+                return _tree.insert(val.first, val.second);
+            }
 
-            
+            iterator    insert(iterator position, const value_type& val)
+            {
+                ft::pair<iterator, bool> p;
+
+                p = _tree.insert(val.first, val.second);
+                (void)position;
+                return p.first;
+            }
+
+            template <class InputIterator>
+            void    insert(InputIterator first, InputIterator last)
+            {
+                while (first != last)
+                {
+                    _tree.insert(first->first, first->second);
+                    first++;
+                }
+            }
+
+            void    print()
+            {
+                _tree.printTree();
+            }
+
+            iterator    begin()
+            {
+                return _tree.begin();
+            }
+
+            iterator    end()
+            {
+                return _tree.end();
+            }
     };
 }
 

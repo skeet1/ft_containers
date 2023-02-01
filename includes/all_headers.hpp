@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 13:12:35 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/05 14:37:49 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/31 10:11:50 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,7 @@
 #include <cmath>
 #include "./../utils/enable_if.hpp"
 #include "./../utils/is_integral.hpp"
+#include "./../utils/lexicographical_compare.hpp"
+#include "./../utils/pair.hpp"
 
 #endif
