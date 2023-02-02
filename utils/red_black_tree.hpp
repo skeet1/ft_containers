@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/30 20:27:51 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:18:08 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,30 @@
 #include <vector>
 #include "pair.hpp"
 
-template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
+template<class _Tp, class _Compare, class _Allocator>
 class RBT {
-        struct Node {
-            ft::pair<Key, T> p;
-            Node*   _parent;
-            Node*   _left;
-            Node*   _right;
-            Node*   _uncle;
-            size_t  _black_height;
-            size_t  _height;
-            char    _color;
-            bool    _end;
+    public:
+		typedef _Tp									value_type;
+        typedef _Tp*								pointer;
+        typedef _Tp&								reference;
+        typedef _Compare							value_compare;
+        typedef _Allocator							allocator_type;
 
-            Node(Key key, T value)
+    private:
+        struct Node {
+            value_type  _val;
+            Node*       _parent;
+            Node*       _left;
+            Node*       _right;
+            Node*       _uncle;
+            size_t      _black_height;
+            size_t      _height;
+            char        _color;
+            bool        _end;
+
+            Node(const value_type& val)
             {
-                p = ft::make_pair(key, value);
+                _val = val;
                 _parent = NULL;
                 _left = NULL;
                 _right = NULL;
@@ -45,41 +53,164 @@ class RBT {
 
             Node()
             {
-                Key a;
-                T b;
-                p = ft::make_pair(a, b);
                 _end = true;
             }
         };
     public:
-            typedef Allocator                                                   allocator_type;
             typedef typename allocator_type::template rebind<Node>::other       allocator_node;
+            
+            // iterators
+        class iterator {
+            private:
+                Node*   curr_node;
+            public:
+                iterator() : curr_node(nullptr)
+                {}
+                
+                iterator(Node* node) : curr_node(node)
+                {}
+
+                // iterator(const iterator& it)
+                // {
+                //     curr_node->_val = it.curr_node->_val;
+                //     curr_node->_black_height = it.curr_node->_black_height;
+                //     curr_node->_left = it.curr_node->_left;
+                //     curr_node->_right = it.curr_node->_right;
+                //     curr_node->_parent = it.curr_node->_parent;
+                //     curr_node->_color = it.curr_node->_color;
+                // }
+
+                value_type*    operator->()
+                {
+                    return &curr_node->_val;
+                }
+
+                bool    operator==(const iterator it)
+                {
+                    return this->curr_node->_val == it.curr_node->_val;
+                }
+
+                bool    operator!=(const iterator it)
+                {
+                    return this->curr_node->_val != it.curr_node->_val;
+                }
+
+                iterator    operator++()
+                {
+                    Node*   succ = curr_node->_right;
+
+                    while (succ && succ->_left)
+                        succ = succ->_left;
+                    if (succ)
+                        curr_node = succ;
+                    else
+                    {
+                        while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
+                            curr_node = curr_node->_parent;
+                        curr_node = curr_node->_parent;
+                    }
+                    return curr_node;
+                }
+                
+                iterator    operator++(int)
+                {
+                    Node*   save_curr_node = curr_node;
+                    Node*   succ = curr_node->_right;
+
+                    while (succ && succ->_left)
+                        succ = succ->_left;
+                    if (succ)
+                        curr_node = succ;
+                    else
+                    {
+                        while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
+                            curr_node = curr_node->_parent;
+                        curr_node = curr_node->_parent;
+                    }
+                    return save_curr_node;
+                }
+                
+                iterator    operator--()
+                {
+                    if (curr_node->_end)
+                    {
+                        curr_node = curr_node->_parent;
+                    }
+                    else
+                    {
+                        Node*   predec = curr_node->_left;
+                        
+                        while (predec && predec->_right)
+                            predec = predec->_right;
+                        if (predec)
+                            curr_node = predec;
+                        else
+                        {
+                            while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
+                                curr_node = curr_node->_parent;
+                            curr_node = curr_node->_parent;
+                        }
+                    }
+                    return curr_node;
+                }
+                
+                iterator    operator--(int)
+                {
+                    Node*   save_curr_node = curr_node;
+                    if (curr_node->_end)
+                    {
+                        curr_node = curr_node->_parent;
+                    }
+                    else
+                    {
+                        Node*   predec = curr_node->_left;
+                        
+                        while (predec && predec->_right)
+                            predec = predec->_right;
+                        if (predec)
+                            curr_node = predec;
+                        else
+                        {
+                            while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
+                                curr_node = curr_node->_parent;
+                            curr_node = curr_node->_parent;
+                        }
+                    }
+                    return save_curr_node;
+                }
+        };
     private:
         Node*                   root;
+        size_t                  _size;
         allocator_type          alloc;
         allocator_node          alloc_node;
     
     protected:
         
-        void    insert_node(Key key, T value)
+        ft::pair<iterator, bool>    insert_node(const value_type& val)
         {
-            if (search(root, key))
-                return ;
+            Node*   find = search(root, val);
+            if (find)
+            {
+                return ft::pair<iterator, bool>(iterator(find), false);
+            }
+            _size++;
             Node*   newNode = alloc_node.allocate(1);
-            alloc_node.construct(newNode, Node(key, value));
+            alloc_node.construct(newNode, Node(val));
             root = insert_node(root, newNode);
             check_violation(newNode);
+            return ft::pair<iterator, bool>(iterator(newNode), true);
         }
 
-        Node*   search(Node* root, Key key)
+        Node*   search(Node* root, const value_type& val)
         {
             while (root)
             {
-                if (Compare()(key, root->p.first))
+                if (value_compare()(val, root->_val))
                 {
                     root = root->_left;
                 }
-                else if (Compare()(root->p.first, key))
+                else if (value_compare()(root->_val, val))
                 {
                     root = root->_right;
                 }
@@ -91,29 +222,23 @@ class RBT {
 
         void    swap_node(Node*& n1, Node*& n2)
         {
-            Key tmp_key;
-            T   tmp_value;
+            value_type  tmp_val;
 
-            tmp_key = n1->p.first;
-            tmp_value = n1->p.second;
-
-            n1->p.first = n2->p.first;
-            n1->p.second = n2->p.second;
-
-            n2->p.first = tmp_key;
-            n2->p.second = tmp_value;
+            tmp_val = n1->_val;
+            n1->_val = n2->_val;
+            n2->_val = tmp_val;
         }
 
         Node*   insert_node(Node* node, Node* newNode)
         {
             if (node == NULL)
                 return newNode;
-            if (Compare()(newNode->p.first, node->p.first))
+            if (value_compare()(newNode->_val, node->_val))
             {
                 node->_left = insert_node(node->_left, newNode);
                 node->_left->_parent = node;
             }
-            else if (Compare()(node->p.first, newNode->p.first))
+            else if (value_compare()(node->_val, newNode->_val))
             {
                 node->_right = insert_node(node->_right, newNode);
                 node->_right->_parent = node;
@@ -270,7 +395,7 @@ class RBT {
             }
         }
         
-        Node*   search(Key val)
+        Node*   search(const value_type& val)
         {
             return search(root, val);
         }
@@ -508,14 +633,14 @@ class RBT {
             }
         }
 
-        void    remove(Node*& node, Key key)
+        void    remove(Node*& node, const value_type& val)
         {
             if (!node)
                 return ;
-            if (Compare()(key, node->p.first))
-                remove(node->_left, key);
-            else if (Compare()(node->p.first, key))
-                remove(node->_right, key);
+            if (value_compare()(val, node->val))
+                remove(node->_val, val);
+            else if (value_compare()(node->p.first, val))
+                remove(node->_right, val);
             else
             {
                 if (node->_left == NULL && node->_right == NULL)
@@ -588,9 +713,9 @@ class RBT {
                 std::cout << "\033[31m";
             else
                 std::cout << "\033[30m";
-            std::cout << "(" << root->p.first << ":" << root->p.second << ")";
+            std::cout << "(" << root->_val.first << ":" << root->_val.second << ")";
             if (root->_parent)
-                std::cout << " P is : " << root->_parent->p.first;
+                std::cout << " P is : " << root->_parent->_val.first;
             else
                 std::cout << " i am the root";
             std::cout << std::endl << std::endl;
@@ -628,23 +753,25 @@ class RBT {
         RBT()
         {
             root = NULL;
+            _size = 0;
         }
 
-        void    insert(Key key, T value)
+        ft::pair<iterator, bool>    insert(const value_type& val)
         {
-            insert_node(key, value);
+            return insert_node(val);
         }
 
-        void    remove(Key key)
+        void    remove(const value_type& val)
         {
-            remove(root, key);
+            remove(root, val);
         }
 
-        bool    find(Key key)
+        ft::pair<iterator, bool>    find(const value_type& val)
         {
-            if (search(key))
-                return true;
-            return false;
+            Node* node = search(val);
+            if (node)
+                return ft::pair<iterator, bool>(iterator(node), true);
+            return ft::pair<iterator, bool>(iterator(node), false);
         }
 
         void    clear()
@@ -652,138 +779,15 @@ class RBT {
             clear(root);
         }
 
+        size_t  size() const
+        {
+            return _size;
+        }
+
         void    printTree()
         {
             printTree(root, 0);
         }
-        
-        // iterators
-        class iterator {
-            private:
-                Node*   curr_node;
-            public:
-                iterator() : curr_node(nullptr)
-                {}
-                
-                iterator(Node* node) : curr_node(node)
-                {}
-
-                iterator(const iterator& it)
-                {
-                    curr_node->p = it.curr_node->p;
-                    curr_node->_black_height = it.curr_node->_black_height;
-                    curr_node->_left = it.curr_node->_left;
-                    curr_node->_right = it.curr_node->_right;
-                    curr_node->_parent = it.curr_node->_parent;
-                    curr_node->_color = it.curr_node->_color;
-                }
-
-                void    operator*()
-                {
-                }
-
-                bool    operator==(const iterator it)
-                {
-                    if (!curr_node || !it.curr_node) return false;
-                    return curr_node->p.first == it.curr_node->p.first;
-                }
-
-                bool    operator!=(const iterator it)
-                {
-                    if (!curr_node) return false;
-                    if (!it.curr_node) return true;
-                    return curr_node->p.first != it.curr_node->p.first;
-                }
-
-                ft::pair<Key, T>*    operator->()
-                {
-                    return &curr_node->p;
-                }
-
-                iterator    operator++()
-                {
-                    Node*   succ = curr_node->_right;
-
-                    while (succ && succ->_left)
-                        succ = succ->_left;
-                    if (succ)
-                        curr_node = succ;
-                    else
-                    {
-                        while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
-                            curr_node = curr_node->_parent;
-                        curr_node = curr_node->_parent;
-                    }
-                    return curr_node;
-                }
-                
-                iterator    operator++(int)
-                {
-                    Node*   save_curr_node = curr_node;
-                    Node*   succ = curr_node->_right;
-
-                    while (succ && succ->_left)
-                        succ = succ->_left;
-                    if (succ)
-                        curr_node = succ;
-                    else
-                    {
-                        while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
-                            curr_node = curr_node->_parent;
-                        curr_node = curr_node->_parent;
-                    }
-                    return save_curr_node;
-                }
-                
-                iterator    operator--()
-                {
-                    if (curr_node->_end)
-                    {
-                        curr_node = curr_node->_parent;
-                    }
-                    else
-                    {
-                        Node*   predec = curr_node->_left;
-                        
-                        while (predec && predec->_right)
-                            predec = predec->_right;
-                        if (predec)
-                            curr_node = predec;
-                        else
-                        {
-                            while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
-                                curr_node = curr_node->_parent;
-                            curr_node = curr_node->_parent;
-                        }
-                    }
-                    return curr_node;
-                }
-                
-                iterator    operator--(int)
-                {
-                    Node*   save_curr_node = curr_node;
-                    if (curr_node->_end)
-                    {
-                        curr_node = curr_node->_parent;
-                    }
-                    else
-                    {
-                        Node*   predec = curr_node->_left;
-                        
-                        while (predec && predec->_right)
-                            predec = predec->_right;
-                        if (predec)
-                            curr_node = predec;
-                        else
-                        {
-                            while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
-                                curr_node = curr_node->_parent;
-                            curr_node = curr_node->_parent;
-                        }
-                    }
-                    return save_curr_node;
-                }
-        };
 
         iterator   begin()
         {
@@ -791,17 +795,33 @@ class RBT {
             return iterator(smallest);
         }
 
+        const iterator   begin() const
+        {
+            Node*   smallest = find_the_smallest(root);
+            return iterator(smallest);
+        }
+		
         iterator    end()
         {
             Node*   nil;
-            Node*   right_most;
 
             nil = alloc_node.allocate(1);
             alloc_node.construct(nil);
-            right_most = root;
-            while (right_most->_right)
-                right_most = right_most->_right;
-            nil->_parent = right_most;
+            nil->_parent = NULL;
+            root->_parent = nil;
+            nil->_left = root;
+            return iterator(nil);
+        }
+		
+        const iterator    end() const
+        {
+            Node*   nil;
+
+            nil = alloc_node.allocate(1);
+            alloc_node.construct(nil);
+            nil->_parent = NULL;
+            root->_parent = nil;
+            nil->_left = root;
             return iterator(nil);
         }
 };

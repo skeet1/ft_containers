@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 15:54:08 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/28 15:24:48 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/31 10:19:24 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputI
         return (first2 != last2);
     }
 
-template <class InputIterator1, class InputIterator2>
+template <class InputIterator1, class InputIterator2, class Compare>
 bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp)
 {
     while (first1 != last1)

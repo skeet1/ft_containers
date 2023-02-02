@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 11:39:15 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/04 13:11:27 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/28 15:33:24 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include <iostream>
 
 namespace ft {
-    template <typename T> struct is_integral : std::integral_constant<bool,
+    template <typename T>
+    struct is_integral : std::integral_constant<bool,
     std::is_same<bool, T>::value ||
     std::is_same<char, T>::value ||
     std::is_same<signed char, T>::value ||
