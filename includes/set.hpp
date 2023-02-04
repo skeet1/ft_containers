@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 10:30:43 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/03 10:54:47 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/03 11:03:46 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ namespace ft {
 			{
 				while (first != last)
 				{
-					_tree.insert(first);
+					_tree.insert(*first);
 					first++;
 				}
 			}
