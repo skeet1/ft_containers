@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/04 15:40:51 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/04 16:27:18 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,17 @@ class RBT {
 
 				bool    operator==(const iterator it)
 				{
+					// std::cout << "check equal" << std::endl;
 					return this->curr_node->_val == it.curr_node->_val;
 				}
 
 				bool    operator!=(const iterator it)
 				{
-					return this->curr_node->_val != it.curr_node->_val;
+					// std::cout << "check diff" << std::endl;
+					bool test = this->curr_node->_val != it.curr_node->_val;
+					std::cout << std::boolalpha;
+					// std::cout << test << std::endl;
+					return test;
 				}
 
 				iterator    operator++()
@@ -203,7 +208,7 @@ class RBT {
 			// std::cout << "root " << parent->_val.first << " " << parent->_val.second << std::endl;
 		}
 	private:
-		Node*                   root;
+		// Node*                   root;
 		Node*					nil;
 		size_t                  _size;
 		allocator_type          alloc;
@@ -213,7 +218,8 @@ class RBT {
 		
 		ft::pair<iterator, bool>    insert_node(const value_type& val)
 		{
-			Node*   find = search(root, val);
+			Node*  child;
+			Node*   find = search(nil->_left, val);
 			if (find)
 			{
 				return ft::pair<iterator, bool>(iterator(find), false);
@@ -221,17 +227,10 @@ class RBT {
 			_size++;
 			Node*   newNode = alloc_node.allocate(1);
 			alloc_node.construct(newNode, Node(val));
-			// if (root == NULL)
-			// {
-			// 	root = insert_node(root, newNode);
-			// 	nil->_left = root;
-			// 	root
-			// }
-			// else	
-			root = insert_node(root, newNode);
+			child = insert_node(nil->_left, newNode);
+			nil->_left = child;
+			child->_parent = nil;
 			check_violation(newNode);
-			root->_parent = nil;
-			nil->_left = root;
 			return ft::pair<iterator, bool>(iterator(newNode), true);
 		}
 
@@ -338,6 +337,7 @@ class RBT {
 
 		void    check_violation(Node *node)
 		{
+			Node*	root = nil->_left;
 			Node* parent = nullptr;
 			Node* grandpa = nullptr;
 			Node* uncle = nullptr;
@@ -360,13 +360,13 @@ class RBT {
 					{
 						if (node == parent->_left)
 						{
-							right_rotation(root, grandpa);
+							right_rotation(nil->_left, grandpa);
 							swap_colors(grandpa, parent);
 						}
 						else
 						{
-							left_rotation(root, parent);
-							right_rotation(root, grandpa);
+							left_rotation(nil->_left, parent);
+							right_rotation(nil->_left, grandpa);
 							swap_colors(grandpa, node);
 						}
 						node = parent;
@@ -386,17 +386,17 @@ class RBT {
 					{
 						if (node == parent->_left)
 						{
-							right_rotation(root, parent);
+							right_rotation(nil->_left, parent);
 							parent = grandpa->_right;
 							node = parent->_right;
 						}
-						left_rotation(root, grandpa);
+						left_rotation(nil->_left, grandpa);
 						swap_colors(grandpa, parent);
 						node = parent;
 					}
 				}
 			}
-			root->_color = 'B';
+			nil->_left->_color = 'B';
 		}
 
 		Node*   find_successor(Node* node)
@@ -430,7 +430,7 @@ class RBT {
 		
 		Node*   search(const value_type& val) const
 		{
-			return search(root, val);
+			return search(nil->_left, val);
 		}
 
 		char    get_sibling_color(Node* node)
@@ -539,14 +539,14 @@ class RBT {
 			{
 				Node*& sibling = parent->_right;
 				swap_colors(sibling, parent);
-				left_rotation(root, parent);
+				left_rotation(nil->_left, parent);
 				check_cases(node);
 			}
 			else if (parent && node == parent->_right)
 			{
 				Node*& sibling = parent->_left;
 				swap_colors(sibling, parent);
-				right_rotation(root, parent);
+				right_rotation(nil->_left, parent);
 				check_cases(node);
 			}
 		}
@@ -560,9 +560,9 @@ class RBT {
 
 			swap_colors(sibling, near_nephew);
 			if (sibling == parent->_left)
-				left_rotation(root, sibling);
+				left_rotation(nil->_left, sibling);
 			else
-				right_rotation(root, sibling);
+				right_rotation(nil->_left, sibling);
 			case_six(node);
 		}
 
@@ -575,9 +575,9 @@ class RBT {
 			
 			swap_colors(parent, sibling);
 			if (sibling == parent->_left)
-				right_rotation(root, parent);
+				right_rotation(nil->_left, parent);
 			else
-				left_rotation(root, parent);
+				left_rotation(nil->_left, parent);
 			change_color(far_nephew);
 		}
 
@@ -643,7 +643,7 @@ class RBT {
 			{
 				case_one(node);
 			}
-			else if (node == root)
+			else if (node == nil->_left)
 			{
 				case_two(node);
 				return ;
@@ -678,7 +678,7 @@ class RBT {
 			{
 				if (node->_left == NULL && node->_right == NULL)
 				{
-					if (node == root)
+					if (node == nil->_left)
 					{
 						alloc_node.destroy(node);
 						alloc_node.deallocate(node, 1);
@@ -788,12 +788,8 @@ class RBT {
 
 		RBT()
 		{
-			root = NULL;
-
 			nil = alloc_node.allocate(1);
 			alloc_node.construct(nil, Node());
-			// nil->_val = value_type();
-			
 			_size = 0;
 		}
 
@@ -805,14 +801,12 @@ class RBT {
 		ft::pair<iterator, bool>    insert(const value_type& val)
 		{
 			ft::pair<iterator, bool> p = insert_node(val);
-			root->_parent = nil;
-			nil->_left = root;
 			return p;
 		}
 
 		void    remove(const value_type& val)
 		{
-			remove(root, val);
+			remove(nil->_left, val);
 		}
 
 		ft::pair<iterator, bool>    find(const value_type& val) const
@@ -825,7 +819,7 @@ class RBT {
 
 		void    clear()
 		{
-			clear(root);
+			clear(nil->_left);
 			if (nil)
 			{
 				alloc_node.destroy(nil);
@@ -847,29 +841,29 @@ class RBT {
 
 		void    printTree()
 		{
-			printTree(root, 0);
+			printTree(nil->_left, 0);
 		}
 
 		iterator   begin()
 		{
-			Node*   smallest = find_the_smallest(root);
+			Node*   smallest = find_the_smallest(nil->_left);
 			return iterator(smallest);
 		}
 
 		const iterator   begin() const
 		{
-			Node*   smallest = find_the_smallest(root);
+			Node*   smallest = find_the_smallest(nil->_left);
 			return iterator(smallest);
 		}
 		
 		iterator    end()
 		{
-			return iterator(root->_parent);
+			return iterator(nil);
 		}
 		
 		const iterator    end() const
 		{
-			return iterator(root->_parent);
+			return iterator(nil);
 		}
 };
 
