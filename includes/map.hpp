@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/04 11:21:31 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/04 20:56:22 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ namespace ft {
 				iterator it = find(k);
 				if (it == _tree.end())
 					return 0;
-				_tree.remove(k);
+				_tree.remove(ft::pair<key_type, mapped_type>(k, mapped_type()));
 				return 1;
 			}
 
@@ -205,6 +205,20 @@ namespace ft {
 			key_compare	key_comp() const
 			{
 				return _comp;
+			}
+
+			iterator	lower_bound(const key_type& k)
+			{
+				iterator it = find(k);
+				ft::pair<key_type, mapped_type> p(k, mapped_type());
+				if (it != _tree.end())
+					return it;
+				return _tree.upper_bound(p);
+			}
+
+			iterator	upper_bound(const key_type& k)
+			{
+				return _tree.upper_bound(ft::pair<key_type, mapped_type>(k, mapped_type()));
 			}
 
 			void    print()
