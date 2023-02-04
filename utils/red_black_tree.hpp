@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/04 16:27:18 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/04 17:37:26 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -758,7 +758,7 @@ class RBT {
 
 		void    clear(Node*& node)
 		{
-			if (node == NULL)
+			if (!node)
 				return ;
 			clear(node->_left);
 			clear(node->_right);
@@ -796,6 +796,9 @@ class RBT {
 		~RBT()
 		{
 			clear();
+			alloc_node.destroy(nil);
+			alloc_node.deallocate(nil, 1);
+			nil = nullptr;
 		}
 
 		ft::pair<iterator, bool>    insert(const value_type& val)
@@ -819,20 +822,11 @@ class RBT {
 
 		void    clear()
 		{
+			if (_size == 0)
+				return ;
 			clear(nil->_left);
-			if (nil)
-			{
-				alloc_node.destroy(nil);
-				alloc_node.deallocate(nil, 1);
-				nil = nullptr;
-			}
 			_size = 0;
 		}
-
-		// value_compare key_comp()
-		// {
-		// 	return std::less<char> ;
-		// }
 
 		size_t  size() const
 		{
