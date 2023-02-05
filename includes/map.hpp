@@ -6,12 +6,12 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/05 08:09:57 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/05 12:03:56 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef map_HPP
+#define map_HPP
 
 # include <iostream>
 # include "../utils/red_black_tree.hpp"
@@ -57,7 +57,7 @@ namespace ft {
 			allocator_type											_alloc;
 
 		public:
-			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+			map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 			{
 				_comp = comp;
 				_alloc = alloc;
@@ -70,7 +70,8 @@ namespace ft {
 				_alloc = alloc;
 				while (first != last)
 				{
-					_tree.insert(first);
+					_tree.insert(ft::pair<key_type, mapped_type>(first->first, first->second));
+					// _tree.insert(first);
 					first++;
 				}
 			}
@@ -82,7 +83,6 @@ namespace ft {
 
 			map&    operator=(map& x)
 			{
-				
 				this->clear();
 				this->_alloc = x._alloc;
 				this->_comp = x._comp;
@@ -97,8 +97,7 @@ namespace ft {
 
 			size_type   count(const key_type& k) const
 			{
-				ft::pair<key_type, mapped_type> val(k, mapped_type());
-				ft::pair<iterator, bool> p = _tree.find(val);
+				ft::pair<iterator, bool> p = _tree.find(ft::pair<key_type, mapped_type>(k, mapped_type()));
 				if (p.second)
 					return 1;
 				return 0;
@@ -119,7 +118,6 @@ namespace ft {
 				return _alloc.max_size();
 			}
 
-			// insert ==> (1) single element
 			pair<iterator, bool>    insert(const value_type& val)
 			{
 				pair<iterator, bool> it = _tree.insert(val);
@@ -175,7 +173,7 @@ namespace ft {
 				iterator it = find(k);
 				if (it == _tree.end())
 					return 0;
-				_tree.remove(ft::pair<key_type, mapped_type>(k, mapped_type()));
+				erase(it);
 				return 1;
 			}
 
@@ -208,6 +206,11 @@ namespace ft {
 				return _comp;
 			}
 
+			value_compare	value_comp() const
+			{
+				return value_compare();
+			}
+
 			iterator	lower_bound(const key_type& k)
 			{
 				iterator it = find(k);
@@ -220,6 +223,11 @@ namespace ft {
 			iterator	upper_bound(const key_type& k)
 			{
 				return _tree.upper_bound(ft::pair<key_type, mapped_type>(k, mapped_type()));
+			}
+
+			pair<iterator, iterator>	equal_range(const key_type& k)
+			{
+				return pair<iterator, iterator>(lower_bound(k), upper_bound(k));
 			}
 
 			void	swap(map& x)
