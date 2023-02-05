@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/04 21:02:12 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/05 06:26:52 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -738,14 +738,14 @@ class RBT {
 			}
 		}
 
-		Node*  find_the_smallest(Node* node)
+		Node*  find_the_smallest(Node* node) const
 		{
 			while (node->_left)
 				node = node->_left;
 			return node;
 		}
 
-		Node*   find_the_biggest(Node* node)
+		Node*   find_the_biggest(Node* node) const
 		{
 			while (node->_right)
 				node = node->_right;
