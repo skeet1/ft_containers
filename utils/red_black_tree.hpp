@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/05 06:26:52 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/07 07:48:09 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <set>
 #include <vector>
 #include "pair.hpp"
+#include "iterator_traits.hpp"
 
 template<class _Tp, class _Compare, class _Allocator>
 class RBT {
@@ -64,13 +65,16 @@ class RBT {
 	public:
 			typedef typename allocator_type::template rebind<Node>::other       allocator_node;
 			
-			// iterators
+		// template <class Category, class Type = Node, class Distance = ptrdiff_t, class Pointer = Type*, class Reference = Type&>
 		class iterator {
 			private:
 				Node*   		curr_node;
-				allocator_node	_alloc_node;
 			public:
-			friend class RBT;
+				// typedef Type			iter_value_type;
+				// typedef Distance		iter_difference_type;
+				// typedef Pointer			iter_pointer;
+				// typedef Reference		iter_reference;
+				// typedef Category		iter_iterator_category;
 				iterator() : curr_node(nullptr)
 				{
 				}
@@ -95,14 +99,12 @@ class RBT {
 
 				bool    operator==(const iterator it)
 				{
-					return this->curr_node->_val == it.curr_node->_val;
+					return this->curr_node == it.curr_node;
 				}
 
 				bool    operator!=(const iterator it)
 				{
-					bool test = this->curr_node->_val != it.curr_node->_val;
-					std::cout << std::boolalpha;
-					return test;
+					return this->curr_node != it.curr_node;
 				}
 
 				iterator    operator++()
@@ -174,9 +176,75 @@ class RBT {
 					}
 					return save_curr_node;
 				}
+		};
+		class reverse_iterator {
+			private:
+				iterator _it;
+			public:
+				reverse_iterator()
+				{
+				}
+
+				~reverse_iterator()
+				{
+				}
 				
+				reverse_iterator(iterator it) : _it(it)
+				{
+				}
+
+				iterator    operator->()
+				{
+					return _it;
+				}
+
+				value_type      operator*()
+				{
+					return  this->curr_node->_val;
+				}
+
+				// pointer    operator->()
+				// {
+				// 	return &(operator*());
+				// }
+
+				// reference      operator*()
+				// {
+				// 	return  _it;
+				// }
+
+				bool    operator==(const reverse_iterator it)
+				{
+					return this->_it == it._it;
+				}
+
+				bool    operator!=(const reverse_iterator it)
+				{
+					return !(_it == it._it);
+				}
+
+				reverse_iterator    operator++()
+				{
+					return reverse_iterator(--_it);
+				}
+				
+				reverse_iterator    operator++(int)
+				{
+					return reverse_iterator(_it--);
+				}
+				
+				reverse_iterator    operator--()
+				{
+					return reverse_iterator(++_it);
+				}
+				
+				reverse_iterator    operator--(int)
+				{
+					return reverse_iterator(_it++);
+				}
 		};
 		
+		// typedef typename iterator<std::bidirectional_iterator_tag> iterator;
 	private:
 		Node*					end_node;
 		size_t                  _size;
@@ -832,6 +900,13 @@ class RBT {
 			return iterator(smallest);
 		}
 
+		reverse_iterator	rbegin()
+		{
+			iterator it = end();
+			it--;
+			return reverse_iterator(it);
+		}
+
 		const iterator   begin() const
 		{
 			Node*   smallest = find_the_smallest(end_node->_left);
@@ -841,6 +916,13 @@ class RBT {
 		iterator    end()
 		{
 			return iterator(end_node);
+		}
+
+		reverse_iterator	rend()
+		{
+			iterator it = begin();
+			it--;
+			return reverse_iterator(it);
 		}
 		
 		const iterator    end() const
