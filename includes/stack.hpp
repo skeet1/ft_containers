@@ -6,12 +6,11 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 06:01:38 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/31 11:56:11 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/08 10:04:16 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.hpp"
-#include <stack>
 
 namespace ft
 {
@@ -22,12 +21,23 @@ namespace ft
         public:
             typedef Container                                container_type;
             typedef typename container_type::value_type      value_type;
+            typedef typename container_type::reference       reference;
+            typedef typename container_type::const_reference const_reference;
             typedef typename container_type::size_type       size_type;
 
         protected:
             container_type c;
 
         public:
+            explicit stack(const container_type& _c = container_type()) : c(_c)
+            {
+            }
+
+            // stack(const stack& other)
+            // {
+            //     c = other.c;
+            // }
+
             bool    empty() const
             {
                 return c.size() == 0;
