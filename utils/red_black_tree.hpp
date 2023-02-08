@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/07 07:48:09 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/08 18:29:55 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include <set>
 #include <vector>
 #include "pair.hpp"
-#include "iterator_traits.hpp"
+#include "TreeIterator.hpp"
+
 
 template<class _Tp, class _Compare, class _Allocator>
 class RBT {
@@ -63,188 +64,10 @@ class RBT {
 			}
 		};
 	public:
-			typedef typename allocator_type::template rebind<Node>::other       allocator_node;
-			
-		// template <class Category, class Type = Node, class Distance = ptrdiff_t, class Pointer = Type*, class Reference = Type&>
-		class iterator {
-			private:
-				Node*   		curr_node;
-			public:
-				// typedef Type			iter_value_type;
-				// typedef Distance		iter_difference_type;
-				// typedef Pointer			iter_pointer;
-				// typedef Reference		iter_reference;
-				// typedef Category		iter_iterator_category;
-				iterator() : curr_node(nullptr)
-				{
-				}
+			typedef typename allocator_type::template rebind<Node>::other							allocator_node;
+			typedef typename ft::TreeIterator<std::bidirectional_iterator_tag, _Tp, Node>			iterator;
+			typedef typename ft::TreeRevIterator<std::bidirectional_iterator_tag, _Tp, Node>		reverse_iterator;
 
-				~iterator()
-				{
-				}
-				
-				iterator(Node* node) : curr_node(node)
-				{
-				}
-
-				value_type*    operator->()
-				{
-					return &curr_node->_val;
-				}
-
-				value_type      operator*()
-				{
-					return  this->curr_node->_val;
-				}
-
-				bool    operator==(const iterator it)
-				{
-					return this->curr_node == it.curr_node;
-				}
-
-				bool    operator!=(const iterator it)
-				{
-					return this->curr_node != it.curr_node;
-				}
-
-				iterator    operator++()
-				{
-					Node*   succ = curr_node->_right;
-
-					while (succ && succ->_left)
-						succ = succ->_left;
-					if (succ)
-						curr_node = succ;
-					else
-					{
-						while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
-							curr_node = curr_node->_parent;
-						curr_node = curr_node->_parent;
-					}
-					return curr_node;
-				}
-				
-				iterator    operator++(int)
-				{
-					Node*   save_curr_node = curr_node;
-					Node*   succ = curr_node->_right;
-
-					while (succ && succ->_left)
-						succ = succ->_left;
-					if (succ)
-						curr_node = succ;
-					else
-					{
-						while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_right)
-							curr_node = curr_node->_parent;
-						curr_node = curr_node->_parent;
-					}
-					return save_curr_node;
-				}
-				
-				iterator    operator--()
-				{
-					Node*   predec = curr_node->_left;
-					
-					while (predec && predec->_right)
-						predec = predec->_right;
-					if (predec)
-						curr_node = predec;
-					else
-					{
-						while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
-							curr_node = curr_node->_parent;
-						curr_node = curr_node->_parent;
-					}
-					return curr_node;
-				}
-				
-				iterator    operator--(int)
-				{
-					Node*   save_curr_node = curr_node;
-					Node*   predec = curr_node->_left;
-					
-					while (predec && predec->_right)
-						predec = predec->_right;
-					if (predec)
-						curr_node = predec;
-					else
-					{
-						while (curr_node && curr_node->_parent && curr_node == curr_node->_parent->_left)
-							curr_node = curr_node->_parent;
-						curr_node = curr_node->_parent;
-					}
-					return save_curr_node;
-				}
-		};
-		class reverse_iterator {
-			private:
-				iterator _it;
-			public:
-				reverse_iterator()
-				{
-				}
-
-				~reverse_iterator()
-				{
-				}
-				
-				reverse_iterator(iterator it) : _it(it)
-				{
-				}
-
-				iterator    operator->()
-				{
-					return _it;
-				}
-
-				value_type      operator*()
-				{
-					return  this->curr_node->_val;
-				}
-
-				// pointer    operator->()
-				// {
-				// 	return &(operator*());
-				// }
-
-				// reference      operator*()
-				// {
-				// 	return  _it;
-				// }
-
-				bool    operator==(const reverse_iterator it)
-				{
-					return this->_it == it._it;
-				}
-
-				bool    operator!=(const reverse_iterator it)
-				{
-					return !(_it == it._it);
-				}
-
-				reverse_iterator    operator++()
-				{
-					return reverse_iterator(--_it);
-				}
-				
-				reverse_iterator    operator++(int)
-				{
-					return reverse_iterator(_it--);
-				}
-				
-				reverse_iterator    operator--()
-				{
-					return reverse_iterator(++_it);
-				}
-				
-				reverse_iterator    operator--(int)
-				{
-					return reverse_iterator(_it++);
-				}
-		};
-		
-		// typedef typename iterator<std::bidirectional_iterator_tag> iterator;
 	private:
 		Node*					end_node;
 		size_t                  _size;
