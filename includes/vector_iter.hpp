@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 09:44:54 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/07 17:57:19 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/08 18:03:45 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ namespace ft
 	{
 		public:
 			typedef typename ft::iterator_traits<iterator<Category, T> >::value_type				value_type;
-			typedef typename ft::iterator_traits<iterator<Category, T> >::difference_type		difference_type;
-			typedef typename ft::iterator_traits<iterator<Category, T> >::pointer				pointer;
-			typedef typename ft::iterator_traits<iterator<Category, T> >::reference				reference;
-			typedef typename ft::iterator_traits<iterator<Category, T> >::iterator_category		iterator_tag;
+			typedef typename ft::iterator_traits<iterator<Category, T> >::difference_type			difference_type;
+			typedef typename ft::iterator_traits<iterator<Category, T> >::pointer					pointer;
+			typedef typename ft::iterator_traits<iterator<Category, T> >::reference					reference;
+			typedef typename ft::iterator_traits<iterator<Category, T> >::iterator_category			iterator_tag;
 
 		private:
 			pointer _ptr;

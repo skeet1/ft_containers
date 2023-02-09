@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/08 17:42:08 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/09 15:41:36 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ namespace ft {
 			typedef typename allocator_type::const_pointer												const_pointer;
 			typedef typename ft::vector_Iter<std::random_access_iterator_tag, T>						iterator;
 			typedef typename ft::vector_Rev_Iter<std::random_access_iterator_tag, T>					reverse_iterator;
+			typedef	typename ft::vector_Iter<std::random_access_iterator_tag, const T>					const_iterator;
+			typedef typename ft::vector_Rev_Iter<std::random_access_iterator_tag, const T>				const_reverse_iterator;
 
 		private:
 			size_t				_size;
@@ -50,7 +52,7 @@ namespace ft {
 				return reverse_iterator(_arr + (_size - 1));
 			}
 			
-			const iterator begin() const
+			const_iterator begin() const
 			{
 				return _arr;
 			}
@@ -65,7 +67,7 @@ namespace ft {
 				return reverse_iterator(_arr - 1);
 			}
 			
-			const iterator end() const
+			const_iterator end() const
 			{
 				return _arr + _size;
 			}
@@ -179,7 +181,7 @@ namespace ft {
 			
 			size_type max_size() const
 			{
-				return powl(2, 64)/sizeof(T) - 1;
+				return _alloc.max_size();
 			}
 
 			void resize (size_type n, value_type val = value_type())
@@ -252,6 +254,16 @@ namespace ft {
 				if (_capacity < newCapacity)
 				{
 					_capacity = newCapacity;
+					value_type*	tmp = _alloc.allocate(_capacity);
+					for (size_type i = 0; i < _capacity; i++)
+					{
+						_alloc.construct(tmp+i);
+						if (i < _size)
+							tmp[i] = _arr[i];
+					}
+					_alloc.destroy(_arr);
+					_alloc.deallocate(_arr, _size);
+					_arr = tmp;
 				}
 			}
 			
@@ -606,11 +618,6 @@ namespace ft {
 				_size = tmp_size;
 				_capacity = tmp_capacity;
 				_alloc = tmp_alloc;
-
-				// std::swap(_arr, x._arr);
-				// std::swap(_capacity, x._capacity);
-				// std::swap(_arr, x._arr);
-				// std::swap(_alloc, x._alloc);
 			}
 			
 			template <class T1, class Alloc>
@@ -630,7 +637,9 @@ namespace ft {
 			
 			template <class T1, class Alloc>
 			friend bool operator>=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
-			
+
+			template <class T1, class Alloc>
+			friend void	swap (vector<T1,Alloc>& x, vector<T1,Alloc>& y);
 	};
 
 	template <class T1, class Alloc>
@@ -657,71 +666,64 @@ namespace ft {
 	template <class T1, class Alloc>
 	bool operator<(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
 	{
-		if (lhs.size() < rhs.size())
-			return true;
-		if (lhs.size() == rhs.size())
+		size_t min_size = lhs.size();
+		if (min_size > rhs.size())
+		min_size = rhs.size();
+		for (size_t i = 0; i < min_size; i++)
 		{
-			for (size_t i = 0; i < lhs.size(); i++)
-			{
-				if (lhs._arr[i] >= rhs._arr[i])
-					return false;
-			}
-			return true;
+			if (lhs._arr[i] >= rhs._arr[i])
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	template <class T1, class Alloc>
 	bool operator<=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
 	{
-		if (lhs.size() < rhs.size())
-			return true;
-		if (lhs.size() == rhs.size())
+		size_t min_size = lhs.size();
+		if (min_size > rhs.size())
+		min_size = rhs.size();
+		for (size_t i = 0; i < min_size; i++)
 		{
-			for (size_t i = 0; i < lhs.size(); i++)
-			{
-				if (lhs._arr[i] > rhs._arr[i])
-					return false;
-			}
-			return true;
+			if (lhs._arr[i] > rhs._arr[i])
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	template <class T1, class Alloc>
 	bool operator>(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
 	{
-		if (lhs.size() > rhs.size())
-			return true;
-		if (lhs.size() == rhs.size())
+		size_t min_size = lhs.size();
+		if (min_size > rhs.size())
+		min_size = rhs.size();
+		for (size_t i = 0; i < min_size; i++)
 		{
-			for (size_t i = 0; i < lhs.size(); i++)
-			{
-				if (lhs._arr[i] <= rhs._arr[i])
-					return false;
-			}
-			return true;
+			if (lhs._arr[i] <= rhs._arr[i])
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	template <class T1, class Alloc>
 	bool operator>=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs)
 	{
-		if (lhs.size() > rhs.size())
-			return true;
-		if (lhs.size() == rhs.size())
+		size_t min_size = lhs.size();
+		if (min_size > rhs.size())
+		min_size = rhs.size();
+		for (size_t i = 0; i < min_size; i++)
 		{
-			for (size_t i = 0; i < lhs.size(); i++)
-			{
-				if (lhs._arr[i] < rhs._arr[i])
-					return false;
-			}
-			return true;
+			if (lhs._arr[i] < rhs._arr[i])
+				return false;
 		}
-		return false;
+		return true;
 	}
 
+	template <class T1, class Alloc>
+	void swap (vector<T1,Alloc>& x, vector<T1,Alloc>& y)
+	{
+		x.swap(y);
+	}
 }
 
 #endif
