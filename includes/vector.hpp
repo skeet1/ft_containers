@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/09 15:41:36 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/10 15:04:21 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -671,10 +671,10 @@ namespace ft {
 		min_size = rhs.size();
 		for (size_t i = 0; i < min_size; i++)
 		{
-			if (lhs._arr[i] >= rhs._arr[i])
-				return false;
+			if (lhs._arr[i] < rhs._arr[i])
+				return true;
 		}
-		return true;
+		return false;
 	}
 
 	template <class T1, class Alloc>
@@ -685,10 +685,10 @@ namespace ft {
 		min_size = rhs.size();
 		for (size_t i = 0; i < min_size; i++)
 		{
-			if (lhs._arr[i] > rhs._arr[i])
-				return false;
+			if (lhs._arr[i] <= rhs._arr[i])
+				return true;
 		}
-		return true;
+		return false;
 	}
 
 	template <class T1, class Alloc>
