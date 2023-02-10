@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/08 18:29:55 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/10 12:59:53 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,20 @@ class RBT {
 
 	private:
 		struct Node {
-			value_type  _val;
-			Node*       _parent;
-			Node*       _left;
-			Node*       _right;
-			Node*       _uncle;
-			size_t      _black_height;
-			size_t      _height;
-			char        _color;
+			allocator_type	_alloc_pair;
+			pointer  		_val;
+			Node*       	_parent;
+			Node*       	_left;
+			Node*       	_right;
+			Node*       	_uncle;
+			size_t      	_black_height;
+			size_t      	_height;
+			char        	_color;
 
-			Node(const value_type& val)
+			Node(reference val)
 			{
-				_val = val;
+				_val = _alloc_pair.allocate(1);
+				_alloc_pair.construct(_val, val);
 				_parent = NULL;
 				_left = NULL;
 				_right = NULL;
@@ -54,7 +56,8 @@ class RBT {
 
 			Node()
 			{
-				_val = value_type();
+				_val = _alloc_pair.allocate(1);
+				_alloc_pair.construct(_val, value_type());
 				_parent = NULL;
 				_left = NULL;
 				_right = NULL;
@@ -76,7 +79,7 @@ class RBT {
 
 	protected:
 		
-		ft::pair<iterator, bool>    insert_node(const value_type& val)
+		ft::pair<iterator, bool>    insert_node(reference val)
 		{
 			Node*  child;
 			Node*   find = search(end_node->_left, val);
@@ -98,11 +101,11 @@ class RBT {
 		{
 			while (root)
 			{
-				if (value_compare()(val, root->_val))
+				if (value_compare()(val, *(root->_val)))
 				{
 					root = root->_left;
 				}
-				else if (value_compare()(root->_val, val))
+				else if (value_compare()(*(root->_val), val))
 				{
 					root = root->_right;
 				}
@@ -112,25 +115,16 @@ class RBT {
 			return root;
 		}
 
-		void    swap_node(Node*& n1, Node*& n2)
-		{
-			value_type  tmp_val;
-
-			tmp_val = n1->_val;
-			n1->_val = n2->_val;
-			n2->_val = tmp_val;
-		}
-
 		Node*   insert_node(Node* node, Node* newNode)
 		{
 			if (node == NULL)
 				return newNode;
-			if (value_compare()(newNode->_val, node->_val))
+			if (value_compare()(*(newNode->_val), *(node->_val)))
 			{
 				node->_left = insert_node(node->_left, newNode);
 				node->_left->_parent = node;
 			}
-			else if (value_compare()(node->_val, newNode->_val))
+			else if (value_compare()(*(node->_val), *(newNode->_val)))
 			{
 				node->_right = insert_node(node->_right, newNode);
 				node->_right->_parent = node;
@@ -335,6 +329,8 @@ class RBT {
 					parent->_left = NULL;
 				else if (save_node == parent->_right)
 					parent->_right = NULL;
+				save_node->_alloc_pair.destroy(save_node->_val);
+				save_node->_alloc_pair.deallocate(save_node->_val, 1);
 				alloc_node.destroy(save_node);
 				alloc_node.deallocate(save_node, 1);
 				save_node = nullptr;
@@ -530,9 +526,9 @@ class RBT {
 		{
 			if (!node)
 				return ;
-			if (value_compare()(val, node->_val))
+			if (value_compare()(val, *(node->_val)))
 				remove(node->_left, val);
-			else if (value_compare()(node->_val, val))
+			else if (value_compare()(*(node->_val), val))
 				remove(node->_right, val);
 			else
 			{
@@ -540,6 +536,8 @@ class RBT {
 				{
 					if (node == end_node->_left)
 					{
+						node->_alloc_pair.destroy(node->_val);
+						node->_alloc_pair.deallocate(node->_val, 1);
 						alloc_node.destroy(node);
 						alloc_node.deallocate(node, 1);
 						node = nullptr;
@@ -580,9 +578,10 @@ class RBT {
 			}
 		}
 
-		void    move_data(Node*&n1, Node* n2)
+		void    move_data(Node *&n1, Node*& n2)
 		{
-			n1->_val = n2->_val;
+			std::swap(n1->_val, n2->_val);
+			std::swap(n1->_alloc_pair, n2->_alloc_pair);
 		}
 
 		bool    black_child(Node* node)
@@ -605,9 +604,9 @@ class RBT {
 				std::cout << "\033[31m";
 			else
 				std::cout << "\033[30m";
-			std::cout << "(" << root->_val.first << ":" << root->_val.second << ")";
+			std::cout << "(" << root->_val->first << ":" << root->_val->second << ")";
 			if (root->_parent)
-				std::cout << " P is : " << root->_parent->_val.first;
+				std::cout << " P is : " << root->_parent->_val->first;
 			else
 				std::cout << " i am the root";
 			std::cout << std::endl << std::endl;
@@ -623,6 +622,8 @@ class RBT {
 			clear(node->_right);
 			if (node)
 			{
+				node->_alloc_pair.destroy(node->_val);
+				node->_alloc_pair.deallocate(node->_val, 1);
 				alloc_node.destroy(node);
 				alloc_node.deallocate(node, 1);
 				node = NULL;
@@ -631,20 +632,19 @@ class RBT {
 
 		Node*  find_the_smallest(Node* node) const
 		{
-			while (node->_left)
+			while (node && node->_left)
 				node = node->_left;
 			return node;
 		}
 
 		Node*   find_the_biggest(Node* node) const
 		{
-			while (node->_right)
+			while (node && node->_right)
 				node = node->_right;
 			return node;
 		}
 		
 	public:
-
 		RBT()
 		{
 			end_node = alloc_node.allocate(1);
@@ -655,6 +655,8 @@ class RBT {
 		~RBT()
 		{
 			clear();
+			end_node->_alloc_pair.destroy(end_node->_val);
+			end_node->_alloc_pair.deallocate(end_node->_val, 1);
 			alloc_node.destroy(end_node);
 			alloc_node.deallocate(end_node, 1);
 			end_node = nullptr;
@@ -662,12 +664,15 @@ class RBT {
 
 		ft::pair<iterator, bool>    insert(const value_type& val)
 		{
-			ft::pair<iterator, bool> p = insert_node(val);
+			ft::pair<iterator, bool> p = insert_node((reference)val);
 			return p;
 		}
 
 		void    remove(const value_type& val)
 		{
+			Node* find = search(val);
+			if (find)
+				_size--;
 			remove(end_node->_left, val);
 		}
 
