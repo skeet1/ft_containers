@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/10 12:59:53 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/11 22:29:47 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@
 #include <vector>
 #include "pair.hpp"
 #include "TreeIterator.hpp"
+#include "reverse_iterator.hpp"
 
 
-template<class _Tp, class _Compare, class _Allocator>
+template<class _Tp, class _Compare , class _Allocator>
 class RBT {
 	public:
 		typedef _Tp									value_type;
@@ -67,9 +68,11 @@ class RBT {
 			}
 		};
 	public:
-			typedef typename allocator_type::template rebind<Node>::other							allocator_node;
-			typedef typename ft::TreeIterator<std::bidirectional_iterator_tag, _Tp, Node>			iterator;
-			typedef typename ft::TreeRevIterator<std::bidirectional_iterator_tag, _Tp, Node>		reverse_iterator;
+			typedef typename allocator_type::template rebind<Node>::other										allocator_node;
+			typedef typename ft::TreeIterator<std::bidirectional_iterator_tag, _Tp, Node>						iterator;
+			typedef typename ft::TreeIterator<std::bidirectional_iterator_tag, const _Tp, const Node>			const_iterator;
+			typedef typename ft::ReverseIterator<iterator>														reverse_iterator;
+			typedef typename ft::ReverseIterator<const_iterator>												const_reverse_iterator;
 
 	private:
 		Node*					end_node;
@@ -643,7 +646,7 @@ class RBT {
 				node = node->_right;
 			return node;
 		}
-		
+
 	public:
 		RBT()
 		{
@@ -709,7 +712,7 @@ class RBT {
 
 			while (root)
 			{
-				if (value_compare()(val, root->_val))
+				if (value_compare()(val, *(root->_val)))
 				{
 					upper = root;
 					root = root->_left;
@@ -719,7 +722,31 @@ class RBT {
 					root = root->_right;
 				}
 			}
+			if (value_compare()(*(upper->_val), val))
+				return end();
 			return (iterator(upper));
+		}
+
+		const_iterator	upper_bound(const value_type& val) const
+		{
+			Node*	root = end_node->_left;
+			Node*	upper = root;
+
+			while (root)
+			{
+				if (value_compare()(val, *(root->_val)))
+				{
+					upper = root;
+					root = root->_left;
+				}
+				else
+				{
+					root = root->_right;
+				}
+			}
+			if (value_compare()(*(upper->_val), val))
+				return end();
+			return (const_iterator(upper));
 		}
 
 		iterator   begin()
@@ -728,34 +755,43 @@ class RBT {
 			return iterator(smallest);
 		}
 
-		reverse_iterator	rbegin()
-		{
-			iterator it = end();
-			it--;
-			return reverse_iterator(it);
-		}
-
-		const iterator   begin() const
+		const_iterator   begin() const
 		{
 			Node*   smallest = find_the_smallest(end_node->_left);
-			return iterator(smallest);
+			return const_iterator(smallest);
+		}
+
+		reverse_iterator	rbegin()
+		{
+			return reverse_iterator(end());
+		}
+
+		const_reverse_iterator	rbegin() const
+		{
+			return const_reverse_iterator(end());
 		}
 		
 		iterator    end()
 		{
+			if (_size == 0) return begin();
 			return iterator(end_node);
+		}
+		
+		const_iterator    end() const
+		{
+			return const_iterator(end_node);
 		}
 
 		reverse_iterator	rend()
 		{
-			iterator it = begin();
-			it--;
-			return reverse_iterator(it);
+			if (_size == 0) return rbegin();
+			return reverse_iterator(begin());
 		}
-		
-		const iterator    end() const
+
+		const_reverse_iterator	rend() const
 		{
-			return iterator(end_node);
+			if (_size == 0) return rbegin();
+			return const_reverse_iterator(begin());
 		}
 };
 
