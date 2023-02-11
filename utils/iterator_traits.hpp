@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 06:47:57 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/07 16:50:11 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/11 20:29:01 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft
 		typedef typename Iterator::value_type				value_type;
 		typedef typename Iterator::pointer					pointer;
 		typedef typename Iterator::reference				reference;
-		typedef typename Iterator::iterator_category		iterator_category;
+		typedef typename std::random_access_iterator_tag		iterator_category;
 	};
 
 	template <class T>
