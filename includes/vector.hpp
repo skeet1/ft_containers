@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/10 15:04:21 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/11 18:45:21 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,25 @@
 
 #include "all_headers.hpp"
 #include "../utils/iterator_traits.hpp"
-#include "vector_iter.hpp"
+#include "../utils/vector_iter.hpp"
+#include "../utils/reverse_iterator.hpp"
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> > 
 	class vector {
 		public:
-			typedef T 																					value_type;
-			typedef Allocator																			allocator_type;
-			typedef typename allocator_type::reference													reference;
-			typedef typename allocator_type::const_reference											const_reference;
-			typedef typename allocator_type::size_type													size_type;
-			typedef typename allocator_type::difference_type											difference_type;
-			typedef typename allocator_type::pointer													pointer;
-			typedef typename allocator_type::const_pointer												const_pointer;
-			typedef typename ft::vector_Iter<std::random_access_iterator_tag, T>						iterator;
-			typedef typename ft::vector_Rev_Iter<std::random_access_iterator_tag, T>					reverse_iterator;
-			typedef	typename ft::vector_Iter<std::random_access_iterator_tag, const T>					const_iterator;
-			typedef typename ft::vector_Rev_Iter<std::random_access_iterator_tag, const T>				const_reverse_iterator;
+			typedef T													value_type;
+			typedef Allocator											allocator_type;
+			typedef typename allocator_type::reference					reference;
+			typedef typename allocator_type::const_reference			const_reference;
+			typedef typename allocator_type::size_type					size_type;
+			typedef typename allocator_type::difference_type			difference_type;
+			typedef typename allocator_type::pointer					pointer;
+			typedef typename allocator_type::const_pointer				const_pointer;
+			typedef typename ft::vector_Iter<pointer>					iterator;
+			typedef typename ft::ReverseIterator<iterator>				reverse_iterator;
+			typedef	typename ft::vector_Iter<const_pointer>				const_iterator;
+			typedef typename ft::ReverseIterator<const_iterator>		const_reverse_iterator;
 
 		private:
 			size_t				_size;
@@ -44,19 +45,20 @@ namespace ft {
 			
 			iterator begin()
 			{
-				return _arr;
+				return iterator(_arr);
 			}
+
+			const_iterator begin() const
+			{
+				return const_iterator(_arr);
+			}
+			
 
 			reverse_iterator rbegin()
 			{
-				return reverse_iterator(_arr + (_size - 1));
+				return reverse_iterator(end());
 			}
-			
-			const_iterator begin() const
-			{
-				return _arr;
-			}
-			
+
 			iterator end()
 			{
 				return _arr + _size;
@@ -64,9 +66,9 @@ namespace ft {
 
 			reverse_iterator rend()
 			{
-				return reverse_iterator(_arr - 1);
+				return reverse_iterator(begin());
 			}
-			
+
 			const_iterator end() const
 			{
 				return _arr + _size;
@@ -542,43 +544,50 @@ namespace ft {
 			// erase one position
 			iterator erase(iterator pos)
 			{
-				iterator it = this->begin();
-				iterator ret;
-				size_type i = 0;
-
-				while (it != this->end())
+				iterator it = begin();
+				iterator ret = pos;
+				size_type	i = 0;
+				while (it != pos)
 				{
-					if (it == pos)
-					{
-						ret = it;
-						while (1)
-						{
-							if (it == this->end())
-								break;
-							_arr[i] = _arr[i+1];
-							it++;
-							i++;
-						}
-						break;
-					}
 					it++;
 					i++;
 				}
-				_size--;
+				while (i < _size - 1)
+				{
+					_arr[i] = _arr[i+1];
+					i++;
+				}
+				_size -= 1;
 				return ret;
 			}
 
 			// erase range
 			iterator erase(iterator first, iterator last)
 			{
+				difference_type diff = last - first;
+				iterator it = begin();
 				iterator ret = first;
-				iterator beg = first;
-				while (beg != last)
+				size_type	i = 0;
+				while (it != first)
 				{
-					erase(first);
-					beg++;
+					it++;
+					i++;
 				}
+				while (i < _size - diff)
+				{
+					_arr[i] = _arr[i+diff];
+					i++;
+				}
+				_size -= diff;
 				return ret;
+				// iterator ret = first;
+				// iterator beg = first;
+				// while (beg != last)
+				// {
+				// 	erase(first);
+				// 	beg++;
+				// }
+				// return ret;
 			}
 
 			void	clear()
