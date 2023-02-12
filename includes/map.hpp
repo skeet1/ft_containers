@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/12 13:35:15 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 14:45:43 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,11 +256,6 @@ namespace ft {
 				x.clear();
 				x.insert(_tmp_tree.begin(), _tmp_tree.end());
 				_tmp_tree.clear();
-			}
-
-			void    print()
-			{
-				_tree.printTree();
 			}
 
 			iterator    begin()
