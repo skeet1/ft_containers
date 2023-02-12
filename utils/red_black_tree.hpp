@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/11 22:29:47 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 09:22:12 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,13 @@
 template<class _Tp, class _Compare , class _Allocator>
 class RBT {
 	public:
-		typedef _Tp									value_type;
-		typedef _Tp*								pointer;
-		typedef _Tp&								reference;
-		typedef _Compare							value_compare;
-		typedef _Allocator							allocator_type;
+		typedef _Tp												value_type;
+		typedef _Tp*											pointer;
+		typedef _Tp&											reference;
+		typedef _Compare										value_compare;
+		typedef _Allocator										allocator_type;
+		typedef typename allocator_type::size_type				size_type;
+		typedef typename allocator_type::difference_type		difference_type;
 
 	private:
 		struct Node {
@@ -69,9 +71,9 @@ class RBT {
 		};
 	public:
 			typedef typename allocator_type::template rebind<Node>::other										allocator_node;
-			typedef typename ft::TreeIterator<std::bidirectional_iterator_tag, _Tp, Node>						iterator;
-			typedef typename ft::TreeIterator<std::bidirectional_iterator_tag, const _Tp, const Node>			const_iterator;
+			typedef typename ft::TreeIterator<value_type, Node, allocator_type>								iterator;
 			typedef typename ft::ReverseIterator<iterator>														reverse_iterator;
+			typedef	typename ft::TreeConstIterator<const value_type, const Node, allocator_type>				const_iterator;
 			typedef typename ft::ReverseIterator<const_iterator>												const_reverse_iterator;
 
 	private:

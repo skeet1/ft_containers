@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:01:30 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/12 09:30:16 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 13:15:18 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ namespace ft
 			TreeIterator() : curr_node(nullptr)
 			{
 			}
+
+			// template <class T1, class Node1, class Diff1> 
+			// TreeIterator(const TreeConstIterator<T1, Node1, Diff1> &obj): curr_node(obj.base())
+			// {
+			// }
 
 			~TreeIterator()
 			{

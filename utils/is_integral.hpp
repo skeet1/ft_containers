@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 11:39:15 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/28 15:33:24 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 14:25:55 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ namespace ft {
     struct is_integral : std::integral_constant<bool,
     std::is_same<bool, T>::value ||
     std::is_same<char, T>::value ||
-    std::is_same<signed char, T>::value ||
     std::is_same<unsigned char, T>::value ||
-    std::is_same<wchar_t, T>::value ||
     std::is_same<short, T>::value ||
     std::is_same<unsigned short, T>::value ||
     std::is_same<int, T>::value ||
