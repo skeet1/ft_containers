@@ -6,9 +6,57 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 13:30:09 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/09 15:49:08 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 15:00:56 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../includes/vector.hpp"
+#include <vector>
+
+/*
+	some helper functions, you will need those function when you want to print
+	the content to see the difference between ft and std;
+
+	even if you test (map, set or stack contaienrs), use std::vector 
+	to store the result and then you can easly check the diff.
+
+	else that you are a programmer you don't need me
+	to teach you how to check a code ;)
+*/
+
+/* start Helper functions */
+
+void print(std::vector<int> &v)
+{
+	for (size_t i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i];
+		if (i < v.size() - 1) std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+void print_infos(std::vector<int> &v)
+{
+	std::cout << "size is : " << v.size() << " , and capacity is : " << v.capacity() << std::endl;
+}
+
+void print(ft::vector<int> &v)
+{
+	for (size_t i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i];
+		if (i < v.size() - 1) std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+void print_infos(ft::vector<int> &v)
+{
+	std::cout << "size is : " << v.size() << " , and capacity is : " << v.capacity() << std::endl;
+}
+
+/* end helper functions */
 
 void    vector_test()
 {
@@ -347,5 +395,5 @@ void    vector_test()
 	// if (foo< bar) std::cout << "foo is less than bar\n";
 	// if (foo> bar) std::cout << "foo is greater than bar\n";
 	// if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-	// if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+	// if (foo>=bar) std::cout << "foo is greater than or equal to bar\n"; 
 }
