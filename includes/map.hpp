@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/12 14:45:43 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 15:38:44 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ namespace ft {
 				this->clear();
 				this->_alloc = x._alloc;
 				this->_comp = x._comp;
-				this->insert(x.begin(), x.end());
+				if (x.size())
+					this->insert(x.begin(), x.end());
 				return *this;
 			}
 			
