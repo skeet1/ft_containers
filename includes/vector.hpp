@@ -6,17 +6,18 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 14:44:52 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/11 18:45:21 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 14:36:20 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef vector_HPP
 #define vector_HPP
 
-#include "all_headers.hpp"
 #include "../utils/iterator_traits.hpp"
 #include "../utils/vector_iter.hpp"
 #include "../utils/reverse_iterator.hpp"
+#include "../utils/is_integral.hpp"
+#include "../utils/enable_if.hpp"
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> > 
@@ -648,7 +649,7 @@ namespace ft {
 			friend bool operator>=(const vector<T1,Alloc>& lhs, const vector<T1,Alloc>& rhs);
 
 			template <class T1, class Alloc>
-			friend void	swap (vector<T1,Alloc>& x, vector<T1,Alloc>& y);
+			friend void	swap(vector<T1,Alloc>& x, vector<T1,Alloc>& y);
 	};
 
 	template <class T1, class Alloc>

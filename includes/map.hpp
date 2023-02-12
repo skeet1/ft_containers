@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 11:05:33 by mkarim            #+#    #+#             */
-/*   Updated: 2023/02/12 10:03:33 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/02/12 13:35:15 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,6 @@ namespace ft {
 
 			void    erase(iterator first, iterator last)
 			{
-
 				iterator save_first = first;
 				difference_type diff = 0;
 				while (save_first != last)
@@ -251,7 +250,7 @@ namespace ft {
 
 			void	swap(map& x)
 			{
-				map			_tmp_tree(begin(), end());
+				map	_tmp_tree(begin(), end());
 				this->clear();
 				this->insert(x.begin(), x.end());
 				x.clear();
@@ -326,6 +325,9 @@ namespace ft {
 
 			template <class Key1, class T1, class Compare1, class Alloc1>
 			friend	bool operator>=(const map<Key1, T1, Compare1, Alloc1>& lhs, const map<Key1, T1, Compare1, Alloc1>& rhs);
+
+			template <class Key1, class T1, class Compare1, class Alloc1>
+  			friend void swap (map<Key1, T1, Compare1, Alloc1>& x, map<Key1, T1, Compare1, Alloc1>& y);
 	};
 
 	template <class Key1, class T1, class Compare1, class Alloc1>
@@ -364,6 +366,12 @@ namespace ft {
 	bool operator>=(const map<Key1, T1, Compare1, Alloc1>& lhs, const map<Key1, T1, Compare1, Alloc1>& rhs)
 	{
 		return ((lhs == rhs) || (lhs > rhs));
+	}
+
+	template <class Key1, class T1, class Compare1, class Alloc1>
+	void swap (map<Key1, T1, Compare1, Alloc1>& x, map<Key1, T1, Compare1, Alloc1>& y)
+	{
+		x.swap(y);
 	}
 }
 
